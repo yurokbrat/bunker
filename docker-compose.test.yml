@@ -2,7 +2,7 @@ services:
   django-bunker-test:
     build:
       context: .
-      dockerfile: ./compose/test/django/Dockerfile
+      dockerfile: ./compose/local/django/Dockerfile
     image: django_bunker_test
     container_name: django_bunker_test
     depends_on:
