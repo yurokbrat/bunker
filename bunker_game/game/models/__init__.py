@@ -1,5 +1,4 @@
 from bunker_game.game.models.bunker.model import Bunker, BunkerRoom
-from bunker_game.game.models.card import Card
 from bunker_game.game.models.catastrophe import Catastrophe
 from bunker_game.game.models.personage.additional_info import AdditionalInfo
 from bunker_game.game.models.personage.baggage import Baggage
@@ -12,7 +11,6 @@ from bunker_game.game.models.personage.profession import Profession
 
 __all__ = (
     "Catastrophe",
-    "Card",
     "Personage",
     "Bunker",
     "BunkerRoom",
