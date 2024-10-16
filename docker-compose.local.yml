@@ -1,0 +1,120 @@
+volumes:
+  postgres_bunker_local_data: {}
+  postgres_bunker_local_data_backups: {}
+  redis_bunker_local: {}
+  minio_local_data:
+
+
+services:
+  django-bunker-local: &django
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: django_bunker_local
+    container_name: django_bunker_local
+    depends_on:
+      - postgres-bunker-local
+      - redis-bunker-local
+      - mailpit-bunker-local
+      - minio-bunker-local
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - '8000:8000'
+    command: /start
+    networks:
+      - bunker_network
+
+  postgres-bunker-local:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: postgres_bunker_local
+    container_name: postgres_bunker_local
+    volumes:
+      - postgres_bunker_local_data:/var/lib/postgresql/data
+      - postgres_bunker_local_data_backups:/backups
+    env_file:
+      - ./.envs/.local/.postgres
+    networks:
+      - bunker_network
+
+  mailpit-bunker-local:
+    image: docker.io/axllent/mailpit:latest
+    container_name: mailpit_bunker_local
+    ports:
+      - "8025:8025"
+    networks:
+      - bunker_network
+
+  redis-bunker-local:
+    image: docker.io/redis:6
+    container_name: redis_bunker_local
+    volumes:
+      - redis_bunker_local:/data
+    networks:
+      - bunker_network
+
+
+  celeryworker-bunker-local:
+    <<: *django
+    image: celeryworker_bunker_local
+    container_name: celeryworker_bunker_local
+    depends_on:
+      - redis-bunker-local
+      - postgres-bunker-local
+      - mailpit-bunker-local
+    ports: []
+    command: /start-celeryworker
+    networks:
+      - bunker_network
+
+  celerybeat-bunker-local:
+    <<: *django
+    image: celerybeat_bunker_local
+    container_name: celerybeat_bunker_local
+    depends_on:
+      - redis-bunker-local
+      - postgres-bunker-local
+      - mailpit-bunker-local
+    ports: []
+    command: /start-celerybeat
+    networks:
+      - bunker_network
+
+  flower-bunker-local:
+    <<: *django
+    image: flower_bunker_local
+    container_name: flower_bunker_local
+    ports:
+      - '5555:5555'
+    command: /start-flower
+    networks:
+      - bunker_network
+
+  minio-bunker-local:
+    image: minio/minio:RELEASE.2024-10-13T13-34-11Z-cpuv1
+    container_name: minio_bunker_local
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f",
+              "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    volumes:
+      - minio_local_data:/data
+    env_file:
+      - ./.envs/.local/.django
+    command: server --console-address ":9001" /data
+    networks:
+      - bunker_network
+
+networks:
+  bunker_network:
+    driver: bridge
