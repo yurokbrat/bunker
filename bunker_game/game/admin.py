@@ -1,8 +1,20 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 
-from bunker_game.game.models import Catastrophe, Card, Personage, Bunker, BunkerRoom, Disease, Hobby, Phobia, \
-    Profession, Baggage, Character, AdditionalInfo
+from bunker_game.game.models import (
+    AdditionalInfo,
+    Baggage,
+    Bunker,
+    BunkerRoom,
+    Card,
+    Catastrophe,
+    Character,
+    Disease,
+    Hobby,
+    Personage,
+    Phobia,
+    Profession,
+)
 
 
 @admin.register(Catastrophe)

@@ -10,10 +10,12 @@ class UpdateLastOnlineMiddleware:
     def __call__(self, request):
         assert hasattr(
             request,
-            "user"
-        ), "The UpdateLastOnlineMiddleware requires authentication middleware to be installed."
+            "user",
+        ), (
+            "The UpdateLastOnlineMiddleware requires "
+            "authentication middleware to be installed."
+        )
         if request.user.is_authenticated:
             User.objects.filter(id=request.user.id).update(last_online=timezone.now())
 
-        response = self.get_response(request)
-        return response
+        return self.get_response(request)

@@ -6,8 +6,16 @@ from bunker_game.utils.generate_hide_name import upload_to_avatars
 
 class User(AbstractUser):
     name = models.CharField(blank=True, max_length=255, verbose_name="имя пользователя")
-    avatar = models.ImageField(blank=True, upload_to=upload_to_avatars, verbose_name="аватар")
-    last_online = models.DateTimeField(blank=True, null=True, verbose_name="последнее посещение")
+    avatar = models.ImageField(
+        blank=True,
+        upload_to=upload_to_avatars,
+        verbose_name="аватар",
+    )
+    last_online = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="последнее посещение",
+    )
     room = models.ForeignKey(
         to="room.Room",
         on_delete=models.SET_NULL,

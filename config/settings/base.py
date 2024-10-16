@@ -151,7 +151,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "bunker_game.users.middleware.UpdateLastOnlineMiddleware"
+    "bunker_game.users.middleware.UpdateLastOnlineMiddleware",
 ]
 
 # STATIC

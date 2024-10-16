@@ -1,8 +1,8 @@
 import pytest
 from rest_framework.test import APIRequestFactory
 
-from bunker_game.users.views import UserViewSet
 from bunker_game.users.models import User
+from bunker_game.users.views import UserViewSet
 
 
 class TestUserViewSet:

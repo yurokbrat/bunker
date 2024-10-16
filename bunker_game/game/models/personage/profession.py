@@ -5,7 +5,10 @@ from bunker_game.game.models.constants import ExperienceChoice
 
 class Profession(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="профессия")
-    experience = models.CharField(choices=ExperienceChoice.choices, verbose_name="опыт работы")
+    experience = models.CharField(
+        choices=ExperienceChoice.choices,
+        verbose_name="опыт работы",
+    )
 
     class Meta:
         verbose_name = "профессия"

@@ -20,4 +20,4 @@ class Room(models.Model):
         verbose_name_plural = "комнаты"
 
     def __str__(self):
-        return f"Комната №{self.id} | Создатель – {self.creator}"
+        return f"Комната №{self.id} | Создатель - {self.creator}"

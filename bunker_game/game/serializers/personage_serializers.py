@@ -1,6 +1,15 @@
 from rest_framework import serializers
 
-from bunker_game.game.models import Personage, Disease, Profession, Phobia, Hobby, Character, AdditionalInfo, Baggage
+from bunker_game.game.models import (
+    AdditionalInfo,
+    Baggage,
+    Character,
+    Disease,
+    Hobby,
+    Personage,
+    Phobia,
+    Profession,
+)
 from bunker_game.users.serializers import UserSerializer
 
 

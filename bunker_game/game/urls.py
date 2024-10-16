@@ -1,7 +1,7 @@
-from django.urls import URLPattern, URLResolver, path, include
+from django.urls import URLPattern, URLResolver, include, path
 from rest_framework.routers import SimpleRouter
 
-from bunker_game.game.views import PersonageViewSet, BunkerViewSet, CatastropheViewSet
+from bunker_game.game.views import BunkerViewSet, CatastropheViewSet, PersonageViewSet
 
 router = SimpleRouter()
 
