@@ -42,19 +42,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build the Stack
-        run: docker compose -f docker-compose.local.yml build django
-
-      - name: Build the docs
-        run: docker compose -f docker-compose.docs.yml build docs
+        run: docker compose -f docker-compose.test.yml build django-bunker-test
 
       - name: Check DB Migrations
-        run: docker compose -f docker-compose.local.yml run --rm django python manage.py makemigrations --check
+        run: docker compose -f docker-compose.test.yml run --rm django-bunker-test python manage.py makemigrations --check
 
       - name: Run DB Migrations
-        run: docker compose -f docker-compose.local.yml run --rm django python manage.py migrate
+        run: docker compose -f docker-compose.test.yml run --rm django-bunker-test python manage.py migrate
 
       - name: Run Django Tests
-        run: docker compose -f docker-compose.local.yml run django pytest
+        run: docker compose -f docker-compose.test.yml run django-bunker-test pytest --create-db
 
       - name: Tear down the Stack
-        run: docker compose -f docker-compose.local.yml down
+        run: docker compose -f docker-compose.test.yml down

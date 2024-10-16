@@ -1,0 +1,22 @@
+services:
+  django-bunker-test:
+    build:
+      context: .
+      dockerfile: ./compose/test/django/Dockerfile
+    image: django_bunker_test
+    container_name: django_bunker_test
+    depends_on:
+      - postgres-bunker-test
+    env_file:
+      - ./.envs/.test/.django
+      - ./.envs/.test/.postgres
+    command: /start
+
+  postgres-bunker-test:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: postgres_bunker_test
+    container_name: postgres_bunker_test
+    env_file:
+      - ./.envs/.test/.postgres
