@@ -8,9 +8,12 @@ from bunker_game.game.models.personage.hobby import Hobby
 from bunker_game.game.models.personage.model import Personage
 from bunker_game.game.models.personage.phobia import Phobia
 from bunker_game.game.models.personage.profession import Profession
+from bunker_game.game.models.charasteristic_visibility import CharacteristicVisibility
+from bunker_game.game.models.game import Game
 
 __all__ = (
     "Catastrophe",
+    "CharacteristicVisibility",
     "Personage",
     "Bunker",
     "BunkerRoom",
@@ -21,4 +24,5 @@ __all__ = (
     "Character",
     "Hobby",
     "Phobia",
+    "Game",
 )

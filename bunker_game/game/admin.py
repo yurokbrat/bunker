@@ -6,7 +6,6 @@ from bunker_game.game.models import (
     Baggage,
     Bunker,
     BunkerRoom,
-    Card,
     Catastrophe,
     Character,
     Disease,
@@ -19,11 +18,6 @@ from bunker_game.game.models import (
 
 @admin.register(Catastrophe)
 class CatastropheAdmin(ModelAdmin): ...
-
-
-@admin.register(Card)
-class CardAdmin(ModelAdmin):
-    list_filter = ("type",)
 
 
 @admin.register(BunkerRoom)

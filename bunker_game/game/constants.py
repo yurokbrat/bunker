@@ -31,3 +31,16 @@ class ExperienceChoice(models.TextChoices):
     EXPERIENCED = "experienced", "Опытный"
     PROFESSIONAL = "professional", "Профессионал"
     MASTER = "master", "Мастер"
+
+
+class TypeCharacteristic(models.TextChoices):
+    AGE = "age", "Возраст"
+    GENDER = "gender", "Пол"
+    ORIENTATION = "orientation", "Ориентация"
+    DISEASE = "disease", "Здоровье"
+    PROFESSION = "profession", "Профессия"
+    PHOBIA = "phobia", "Фобия"
+    HOBBY = "hobby", "Хобби"
+    CHARACTER = "character", "Характер"
+    ADDITIONAL_INFO = "additional_info", "Доп. Информация"
+    BAGGAGE = "baggage", "Багаж"

@@ -1,6 +1,6 @@
 from django.db import models
 
-from bunker_game.game.models.constants import ExperienceChoice
+from bunker_game.game.constants import ExperienceChoice
 
 
 class Hobby(models.Model):
@@ -15,4 +15,4 @@ class Hobby(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.experience}"

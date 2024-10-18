@@ -16,14 +16,6 @@ class User(AbstractUser):
         null=True,
         verbose_name="последнее посещение",
     )
-    room = models.ForeignKey(
-        to="room.Room",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        verbose_name="комната",
-        related_name="users",
-    )
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
 

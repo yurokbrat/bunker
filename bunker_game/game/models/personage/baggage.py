@@ -1,6 +1,6 @@
 from django.db import models
 
-from bunker_game.game.models.constants import StatusBaggageChoice
+from bunker_game.game.constants import StatusBaggageChoice
 
 
 class Baggage(models.Model):
@@ -16,4 +16,4 @@ class Baggage(models.Model):
         verbose_name_plural = "багажи"
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.status}"

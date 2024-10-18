@@ -15,7 +15,6 @@ class UserSerializer(serializers.ModelSerializer[User]):
             "date_joined",
             "last_login",
             "last_online",
-            "room",
         )
 
         extra_kwargs = {

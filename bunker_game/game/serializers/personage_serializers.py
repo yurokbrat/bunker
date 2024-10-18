@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from bunker_game.game.constants import TypeCharacteristic
 from bunker_game.game.models import (
     AdditionalInfo,
     Baggage,
@@ -9,6 +10,7 @@ from bunker_game.game.models import (
     Personage,
     Phobia,
     Profession,
+    CharacteristicVisibility,
 )
 from bunker_game.users.serializers import UserSerializer
 
@@ -56,7 +58,7 @@ class BaggageSerializer(serializers.ModelSerializer):
 
 
 class PersonageSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
     disease = DiseaseSerializer()
     profession = ProfessionSerializer()
     phobia = PhobiaSerializer()
@@ -81,3 +83,17 @@ class PersonageSerializer(serializers.ModelSerializer):
             "additional_info",
             "baggage",
         )
+
+
+class PersonageGenerateSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+
+
+class PersonageRegenerateSerializer(serializers.Serializer):
+    characteristic_type = serializers.ChoiceField(choices=TypeCharacteristic.choices)
+
+
+class CharacteristicVisibilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CharacteristicVisibility
+        fields = ("characteristic_type", "is_hidden")

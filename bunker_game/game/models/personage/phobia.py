@@ -1,6 +1,6 @@
 from django.db import models
 
-from bunker_game.game.models.constants import PhobiaStageChoice
+from bunker_game.game.constants import PhobiaStageChoice
 
 
 class Phobia(models.Model):
@@ -16,4 +16,4 @@ class Phobia(models.Model):
         verbose_name_plural = "фобии"
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.stage}"

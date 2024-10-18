@@ -57,9 +57,28 @@ ROOT_URLCONF = "config.urls"
 # https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = "config.wsgi.application"
 
+# ASGI
+# ------------------------------------------------------------------------------
+CHANNEL_REDIS_HOST = env.str("CHANNEL_REDIS_HOST")
+REDIS_CHANEL_SECRET_KEY = env.str(
+    "REDIS_CHANEL_SECRET_KEY", default="vHdmoWDMCIJJczyAKlvRDhAYygbqHejw"
+)
+ASGI_APPLICATION = "config.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [CHANNEL_REDIS_HOST],
+            "symmetric_encryption_keys": [REDIS_CHANEL_SECRET_KEY],
+        },
+    },
+}
+
 # APPS
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
+    "daphne",
+    "channels",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -91,7 +110,6 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "bunker_game.users",
     "bunker_game.game",
-    "bunker_game.room",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

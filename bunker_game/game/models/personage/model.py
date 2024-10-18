@@ -1,6 +1,6 @@
 from django.db import models
 
-from bunker_game.game.models.constants import GenderChoice, OrientationChoice
+from bunker_game.game.constants import GenderChoice, OrientationChoice
 from bunker_game.game.models.personage.additional_info import AdditionalInfo
 from bunker_game.game.models.personage.baggage import Baggage
 from bunker_game.game.models.personage.character import Character
@@ -16,6 +16,14 @@ class Personage(models.Model):
         User,
         on_delete=models.SET_NULL,
         verbose_name="пользователь",
+        null=True,
+        blank=True,
+    )
+    game = models.ForeignKey(
+        "game.Game",
+        on_delete=models.CASCADE,
+        verbose_name="игра",
+        related_name="personages_in_game",
         null=True,
         blank=True,
     )
