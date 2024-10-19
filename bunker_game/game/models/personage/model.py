@@ -27,11 +27,13 @@ class Personage(models.Model):
         null=True,
         blank=True,
     )
-    age = models.PositiveSmallIntegerField(verbose_name="возраст")
-    gender = models.CharField(choices=GenderChoice.choices, verbose_name="пол")
+    age = models.PositiveSmallIntegerField(verbose_name="возраст", blank=True, null=True)
+    gender = models.CharField(choices=GenderChoice.choices, blank=True, null=True, verbose_name="пол")
     orientation = models.CharField(
         choices=OrientationChoice.choices,
         verbose_name="ориентация",
+        blank=True,
+        null=True,
     )
     disease = models.ForeignKey(
         Disease,

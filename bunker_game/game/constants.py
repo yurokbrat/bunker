@@ -44,3 +44,10 @@ class TypeCharacteristic(models.TextChoices):
     CHARACTER = "character", "Характер"
     ADDITIONAL_INFO = "additional_info", "Доп. Информация"
     BAGGAGE = "baggage", "Багаж"
+
+
+class ActionCardTargetChoice(models.TextChoices):
+    ALL = "all", "Все персонажи"
+    MYSELF = "myself", "На себя"
+    ANOTHER_PERSONAGE = "another_personage", "Другой персонаж"
+    GAME = "game", "Игра"

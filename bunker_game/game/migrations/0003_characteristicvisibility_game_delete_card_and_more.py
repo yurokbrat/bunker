@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=False, verbose_name='активна')),
                 ('bunker', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='game.bunker', verbose_name='бункер')),
                 ('catastrophe', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='game.catastrophe', verbose_name='катастрофа')),
-                ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='games_created', to=settings.AUTH_USER_MODEL, verbose_name='создатель игры')),
+                ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='game_creator', to=settings.AUTH_USER_MODEL, verbose_name='создатель игры')),
                 ('personages', models.ManyToManyField(blank=True, related_name='games', to='game.personage', verbose_name='персонажи в игре')),
             ],
             options={

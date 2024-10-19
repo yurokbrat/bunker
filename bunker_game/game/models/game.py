@@ -9,7 +9,7 @@ class Game(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name="создатель игры",
-        related_name="games_created",
+        related_name="game_creator",
     )
     personages = models.ManyToManyField(
         Personage,
