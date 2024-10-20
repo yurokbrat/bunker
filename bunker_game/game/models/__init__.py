@@ -1,4 +1,5 @@
-from bunker_game.game.models.bunker.model import Bunker, BunkerRoom
+from bunker_game.game.models.bunker.bunker_room import BunkerRoom
+from bunker_game.game.models.bunker.model import Bunker
 from bunker_game.game.models.catastrophe import Catastrophe
 from bunker_game.game.models.personage.additional_info import AdditionalInfo
 from bunker_game.game.models.personage.baggage import Baggage

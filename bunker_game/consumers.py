@@ -2,9 +2,8 @@ import json
 
 from channels.exceptions import DenyConnection
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
-
-from bunker_game.game.models import Personage, Game
 
 
 class PersonageConsumer(AsyncWebsocketConsumer):
@@ -21,6 +20,7 @@ class PersonageConsumer(AsyncWebsocketConsumer):
         print("IN CONNECT")
         self.game_id = self.scope["url_route"]["kwargs"]["game_id"]
         try:
+            Personage = apps.get_model("game", "Personage")
             self.personage = await Personage.objects.aget(games=self.game_id)
             self.personage_id = self.personage.id
             print(self.game_id)
