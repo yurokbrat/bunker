@@ -1,9 +1,12 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.constants import StatusBaggageChoice
 
 
 class Baggage(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100, verbose_name="название")
     status = models.CharField(
         choices=StatusBaggageChoice.choices,

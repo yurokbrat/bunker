@@ -18,43 +18,43 @@ from bunker_game.users.serializers import UserSerializer
 class DiseaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Disease
-        fields = ("name", "degree_percent", "is_curable")
+        fields = ("id", "uuid", "name", "degree_percent", "is_curable")
 
 
 class ProfessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession
-        fields = ("name", "experience")
+        fields = ("id", "uuid", "name", "experience")
 
 
 class PhobiaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Phobia
-        fields = ("name", "stage")
+        fields = ("id", "uuid", "name", "stage")
 
 
 class HobbySerializer(serializers.ModelSerializer):
     class Meta:
         model = Hobby
-        fields = ("name", "experience")
+        fields = ("id", "uuid", "name", "experience")
 
 
 class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
-        fields = ("name",)
+        fields = ("id", "uuid", "name")
 
 
 class AdditionalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdditionalInfo
-        fields = ("name",)
+        fields = ("id", "uuid", "name")
 
 
 class BaggageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Baggage
-        fields = ("name", "status")
+        fields = ("id", "uuid", "name", "status")
 
 
 class PersonageSerializer(serializers.ModelSerializer):
@@ -71,6 +71,7 @@ class PersonageSerializer(serializers.ModelSerializer):
         model = Personage
         fields = (
             "id",
+            "uuid",
             "user",
             "age",
             "gender",
@@ -92,4 +93,4 @@ class PersonageRegenerateSerializer(serializers.Serializer):
 class CharacteristicVisibilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = CharacteristicVisibility
-        fields = ("characteristic_type", "is_hidden")
+        fields = ("id", "uuid", "characteristic_type", "is_hidden")

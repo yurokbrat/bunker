@@ -1,9 +1,12 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.constants import ExperienceChoice
 
 
 class Profession(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100, verbose_name="профессия")
     experience = models.CharField(
         choices=ExperienceChoice.choices,

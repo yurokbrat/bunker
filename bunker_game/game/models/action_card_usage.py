@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.models import Game, Personage
@@ -5,6 +7,7 @@ from bunker_game.game.models.action_card import ActionCard
 
 
 class ActionCardUsage(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     card = models.OneToOneField(
         ActionCard,
         on_delete=models.CASCADE,

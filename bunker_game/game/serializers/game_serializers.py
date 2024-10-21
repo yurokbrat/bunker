@@ -16,6 +16,7 @@ class GameSerializer(serializers.ModelSerializer):
         model = Game
         fields = (
             "id",
+            "uuid",
             "creator",
             "personages",
             "bunker",

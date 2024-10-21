@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.models import Catastrophe
@@ -7,6 +9,7 @@ from bunker_game.users.models import User
 
 
 class Game(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     creator = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

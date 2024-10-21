@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from bunker_game.game.models import Personage
 from bunker_game.game.models.game import Game
-from bunker_game.game.models.use_action_card import ActionCardUsage
+from bunker_game.game.models.action_card_usage import ActionCardUsage
 from bunker_game.game.serializers.action_card_serializers import UseActionCardSerializer
 from bunker_game.game.serializers.game_serializers import GameSerializer
 from bunker_game.game.services.generate_game_service import GenerateGameService

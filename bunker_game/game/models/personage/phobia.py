@@ -1,9 +1,12 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.constants import PhobiaStageChoice
 
 
 class Phobia(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=120, verbose_name="название")
     stage = models.CharField(
         max_length=120,

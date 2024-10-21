@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.constants import TypeCharacteristic
@@ -5,6 +7,7 @@ from bunker_game.game.models.personage.model import Personage
 
 
 class CharacteristicVisibility(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     personage = models.ForeignKey(
         Personage,
         on_delete=models.CASCADE,

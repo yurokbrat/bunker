@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.models.bunker.bunker_room import BunkerRoom
@@ -5,6 +7,7 @@ from bunker_game.utils.generate_hide_name import upload_to_bunkers
 
 
 class Bunker(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=120, verbose_name="название", unique=True)
     description = models.CharField(
         max_length=120,

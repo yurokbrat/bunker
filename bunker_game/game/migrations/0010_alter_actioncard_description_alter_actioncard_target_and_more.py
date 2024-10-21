@@ -23,36 +23,36 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='baggage',
             name='status',
-            field=models.CharField(blank=True, choices=[('intact', 'Целый'), ('damaged', 'Поврежденный')], max_length=50, verbose_name='состояние'),
+            field=models.CharField(blank=True, default="", choices=[('intact', 'Целый'), ('damaged', 'Поврежденный')], max_length=50, verbose_name='состояние'),
         ),
         migrations.AlterField(
             model_name='bunker',
             name='description',
-            field=models.CharField(blank=True, max_length=120, verbose_name='описание бункера'),
+            field=models.CharField(blank=True, default="", max_length=120, verbose_name='описание бункера'),
         ),
         migrations.AlterField(
             model_name='hobby',
             name='experience',
-            field=models.CharField(blank=True, choices=[('novice', 'Новичок'), ('amateur', 'Любитель'), ('experienced', 'Опытный'), ('professional', 'Профессионал'), ('master', 'Мастер')], verbose_name='опыт хобби'),
+            field=models.CharField(blank=True, default="", choices=[('novice', 'Новичок'), ('amateur', 'Любитель'), ('experienced', 'Опытный'), ('professional', 'Профессионал'), ('master', 'Мастер')], verbose_name='опыт хобби'),
         ),
         migrations.AlterField(
             model_name='personage',
             name='gender',
-            field=models.CharField(blank=True, choices=[('male', 'Мужчина'), ('female', 'Женщина')], verbose_name='пол'),
+            field=models.CharField(blank=True, default="", choices=[('male', 'Мужчина'), ('female', 'Женщина')], verbose_name='пол'),
         ),
         migrations.AlterField(
             model_name='personage',
             name='orientation',
-            field=models.CharField(blank=True, choices=[('homosexual', 'Гомосексуален'), ('asexual', 'Асексуален'), ('heterosexual', 'Гетеросексуален')], verbose_name='ориентация'),
+            field=models.CharField(blank=True, default="", choices=[('homosexual', 'Гомосексуален'), ('asexual', 'Асексуален'), ('heterosexual', 'Гетеросексуален')], verbose_name='ориентация'),
         ),
         migrations.AlterField(
             model_name='phobia',
             name='stage',
-            field=models.CharField(blank=True, choices=[('none', 'Отсутствует'), ('mild', 'Легкая'), ('moderate', 'Средняя'), ('severe', 'Серьезная'), ('panic', 'Паническая')], max_length=120, verbose_name='стадия'),
+            field=models.CharField(blank=True, default="", choices=[('none', 'Отсутствует'), ('mild', 'Легкая'), ('moderate', 'Средняя'), ('severe', 'Серьезная'), ('panic', 'Паническая')], max_length=120, verbose_name='стадия'),
         ),
         migrations.AlterField(
             model_name='profession',
             name='experience',
-            field=models.CharField(blank=True, choices=[('novice', 'Новичок'), ('amateur', 'Любитель'), ('experienced', 'Опытный'), ('professional', 'Профессионал'), ('master', 'Мастер')], verbose_name='опыт работы'),
+            field=models.CharField(blank=True, default="", choices=[('novice', 'Новичок'), ('amateur', 'Любитель'), ('experienced', 'Опытный'), ('professional', 'Профессионал'), ('master', 'Мастер')], verbose_name='опыт работы'),
         ),
     ]

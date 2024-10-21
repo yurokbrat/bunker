@@ -1,9 +1,12 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.constants import ActionCardTargetChoice
 
 
 class ActionCard(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=120, verbose_name="название")
     key = models.SlugField(max_length=50, verbose_name="ключ карты")
     description = models.CharField(

@@ -1,7 +1,10 @@
+import uuid
+
 from django.db import models
 
 
 class Disease(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=120, verbose_name="название")
     degree_percent = models.IntegerField(
         verbose_name="процент болезни",

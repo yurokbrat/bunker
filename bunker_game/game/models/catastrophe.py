@@ -1,3 +1,5 @@
+import uuid
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -5,6 +7,7 @@ from bunker_game.utils.generate_hide_name import upload_to_catastrophes
 
 
 class Catastrophe(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100, verbose_name="название")
     description = models.CharField(max_length=250, verbose_name="описание")
     image = models.ImageField(

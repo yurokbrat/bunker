@@ -6,7 +6,7 @@ from bunker_game.game.models import Bunker, BunkerRoom
 class BunkerRoomsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BunkerRoom
-        fields = ("id", "name", "area")
+        fields = ("id", "uuid", "name", "area")
 
 
 class BunkerSerializer(serializers.ModelSerializer):
@@ -14,4 +14,4 @@ class BunkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bunker
-        fields = ("id", "name", "rooms")
+        fields = ("id", "uuid", "name", "rooms")

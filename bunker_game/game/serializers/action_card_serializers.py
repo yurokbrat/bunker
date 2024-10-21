@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
 from bunker_game.game.models.action_card import ActionCard
-from bunker_game.game.models.use_action_card import ActionCardUsage
+from bunker_game.game.models.action_card_usage import ActionCardUsage
 
 
 class ActionCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActionCard
-        fields = ("name", "key", "description", "target")
+        fields = ("id", "uuid", "name", "key", "description", "target")
         read_only_fields = ("name", "key", "description", "target")
 
 

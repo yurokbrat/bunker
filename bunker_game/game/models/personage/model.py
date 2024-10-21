@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from bunker_game.game.constants import GenderChoice, OrientationChoice
@@ -12,6 +14,7 @@ from bunker_game.users.models import User
 
 
 class Personage(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     user = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
