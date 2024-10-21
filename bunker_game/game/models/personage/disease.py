@@ -23,4 +23,4 @@ class Disease(models.Model):
         verbose_name_plural = "болезни"
 
     def __str__(self):
-        return f"{self.name} - {self.degree_percent} - {self.is_curable}"
+        return f"{self.name}"

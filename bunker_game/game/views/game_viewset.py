@@ -44,15 +44,15 @@ class GameViewSet(
         detail=True,
         methods=("POST",),
         permission_classes=(IsAuthenticated,),
-        serializer_class=GameSerializer,
     )
     def start(self, request, *args, **kwargs):
         game = self.get_object()
         if game.is_active:
             return Response(data="Игра уже начата", status=status.HTTP_400_BAD_REQUEST)
         GenerateGameService()(game.id)
+        game.refresh_from_db()
         serializer = GameSerializer(instance=game, context={"request": request})
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(responses=GameSerializer())
     @action(

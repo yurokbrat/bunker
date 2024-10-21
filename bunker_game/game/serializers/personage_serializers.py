@@ -24,7 +24,7 @@ class DiseaseSerializer(serializers.ModelSerializer):
 class ProfessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession
-        fields = ("uuid", "name", "experience")
+        fields = ("uuid", "name", "additional_skill", "experience")
 
 
 class PhobiaSerializer(serializers.ModelSerializer):

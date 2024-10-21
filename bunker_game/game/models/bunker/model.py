@@ -8,7 +8,7 @@ from bunker_game.utils.generate_hide_name import upload_to_bunkers
 
 class Bunker(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    name = models.CharField(max_length=120, verbose_name="название", unique=True)
+    name = models.CharField(max_length=120, verbose_name="название")
     description = models.CharField(
         max_length=120,
         verbose_name="описание бункера",
@@ -21,7 +21,8 @@ class Bunker(models.Model):
         null=True,
         blank=True,
     )
-    rooms = models.ManyToManyField(BunkerRoom, verbose_name="комнаты")
+    rooms = models.ManyToManyField(BunkerRoom, blank=True, verbose_name="комнаты")
+    is_generated = models.BooleanField(default=False, verbose_name="сгенерирован")
 
     class Meta:
         verbose_name = "бункер"

@@ -31,31 +31,53 @@ class BunkerAdmin(ModelAdmin): ...
 
 
 @admin.register(Disease)
-class DiseaseAdmin(ModelAdmin): ...
+class DiseaseAdmin(ModelAdmin):
+    ordering = ("name",)
+
+    def get_queryset(self, request):
+        return Disease.objects.filter(is_generated=False)
 
 
 @admin.register(Hobby)
-class HobbyAdmin(ModelAdmin): ...
+class HobbyAdmin(ModelAdmin):
+    ordering = ("name",)
+
+    def get_queryset(self, request):
+        return Hobby.objects.filter(is_generated=False)
 
 
 @admin.register(Phobia)
-class PhobiaAdmin(ModelAdmin): ...
+class PhobiaAdmin(ModelAdmin):
+    ordering = ("name",)
+
+    def get_queryset(self, request):
+        return Phobia.objects.filter(is_generated=False)
 
 
 @admin.register(Profession)
-class ProfessionAdmin(ModelAdmin): ...
+class ProfessionAdmin(ModelAdmin):
+    ordering = ("name",)
+
+    def get_queryset(self, request):
+        return Profession.objects.filter(is_generated=False)
 
 
 @admin.register(Baggage)
-class BaggageAdmin(ModelAdmin): ...
+class BaggageAdmin(ModelAdmin):
+    ordering = ("name",)
+
+    def get_queryset(self, request):
+        return Baggage.objects.filter(is_generated=False)
 
 
 @admin.register(Character)
-class CharacterAdmin(ModelAdmin): ...
+class CharacterAdmin(ModelAdmin):
+    ordering = ("name",)
 
 
 @admin.register(AdditionalInfo)
-class AdditionalInfoAdmin(ModelAdmin): ...
+class AdditionalInfoAdmin(ModelAdmin):
+    ordering = ("name",)
 
 
 @admin.register(Personage)

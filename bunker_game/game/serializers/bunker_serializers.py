@@ -14,4 +14,4 @@ class BunkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bunker
-        fields = ("uuid", "name", "rooms")
+        fields = ("uuid", "name", "description", "image", "rooms")

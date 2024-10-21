@@ -14,6 +14,12 @@ class Profession(models.Model):
         verbose_name="опыт работы",
         default="",
     )
+    additional_skill = models.CharField(
+        max_length=150,
+        blank=True,
+        default="",
+        verbose_name="дополнительное умение",
+    )
     is_generated = models.BooleanField(default=False, verbose_name="сгенерирована")
 
     class Meta:
@@ -21,4 +27,4 @@ class Profession(models.Model):
         verbose_name_plural = "профессии"
 
     def __str__(self):
-        return f"{self.name} - {self.experience}"
+        return f"{self.name}"

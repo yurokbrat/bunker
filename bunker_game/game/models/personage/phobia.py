@@ -22,4 +22,4 @@ class Phobia(models.Model):
         verbose_name_plural = "фобии"
 
     def __str__(self):
-        return f"{self.name} - {self.stage}"
+        return f"{self.name}"

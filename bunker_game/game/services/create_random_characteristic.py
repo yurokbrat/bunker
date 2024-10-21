@@ -57,15 +57,21 @@ def get_random_characteristic():
     }
 
 
-def create_random_characteristic(model: str, random_fields: dict[str, Any]) -> Model:
-    model = apps.get_model("game", model)
-    characteristic_name = (
-        model.objects.filter(is_generated=False).order_by("?").first().name
+def create_random_characteristic(
+    model_type: str,
+    random_fields: dict[str, Any],
+) -> Model:
+    model = apps.get_model("game", model_type)
+    default_characteristic = (
+        model.objects.filter(is_generated=False).order_by("?").first()
     )
     random_characteristic = model.objects.create(
-        name=characteristic_name,
+        name=default_characteristic.name,
         is_generated=True,
     )
+
+    if model_type == "Profession":
+        random_characteristic.additional_skill = default_characteristic.additional_skill
 
     for field, value in random_fields.items():
         if hasattr(random_characteristic, field):
