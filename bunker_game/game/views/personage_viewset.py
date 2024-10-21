@@ -37,11 +37,12 @@ class PersonageViewSet(
 ):
     queryset = Personage.objects.all()
     serializer_class = PersonageSerializer
-    lookup_url_kwarg = "personage_id"
+    lookup_url_kwarg = "personage_uuid"
+    lookup_field = "uuid"
 
     def get_queryset(self) -> QuerySet:
-        game_id = self.kwargs.get("game_id")
-        return Personage.objects.filter(games=game_id)
+        game_uuid = self.kwargs.get("game_uuid")
+        return Personage.objects.filter(games__uuid=game_uuid)
 
     @extend_schema(request=None, responses=PersonageSerializer())
     @action(
@@ -62,7 +63,7 @@ class PersonageViewSet(
 
     @action(
         detail=True,
-        methods=("PATCH", "PUT"),
+        methods=("PATCH",),
         permission_classes=(permissions.IsAuthenticated,),
         serializer_class=PersonageRegenerateSerializer,
     )
@@ -108,7 +109,7 @@ class PersonageViewSet(
         *args: Any,
         **kwargs: Any,
     ) -> Response:
-        game_id = self.kwargs.get("game_id")
+        game_uuid = self.kwargs.get("game_uuid")
         personage = self.get_object()
         characteristic_type = request.data.get("characteristic_type")
         is_hidden = request.data.get("is_hidden")
@@ -120,7 +121,7 @@ class PersonageViewSet(
         visibility.save()
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
-            f"game_{game_id}",
+            f"game_{game_uuid}",
             {
                 "type": "update_characteristics",
                 "personage_id": personage.id,

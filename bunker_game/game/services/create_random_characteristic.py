@@ -13,35 +13,37 @@ from bunker_game.game.constants import (
 )
 from bunker_game.game.models import AdditionalInfo, Character
 
+random = secrets.SystemRandom()
+
 
 def get_random_characteristic():
     return {
-        "age": secrets.randbelow(71),
-        "gender": secrets.choice(GenderChoice.values),
-        "orientation": secrets.choice(OrientationChoice.values),
+        "age": random.randint(15, 60),
+        "gender": random.choice(GenderChoice.values),
+        "orientation": random.choice(OrientationChoice.values),
         "disease": create_random_characteristic(
             "Disease",
             {
-                "degree_percent": secrets.randbelow(101),
+                "degree_percent": random.randint(10, 100),
                 "is_curable": secrets.choice([True, False]),
             },
         ),
         "profession": create_random_characteristic(
             "Profession",
             {
-                "experience": secrets.choice(ExperienceChoice.values),
+                "experience": random.choice(ExperienceChoice.values),
             },
         ),
         "phobia": create_random_characteristic(
             "Phobia",
             {
-                "stage": secrets.choice(PhobiaStageChoice.values),
+                "stage": random.choice(PhobiaStageChoice.values),
             },
         ),
         "hobby": create_random_characteristic(
             "Hobby",
             {
-                "experience": secrets.choice(ExperienceChoice.values),
+                "experience": random.choice(ExperienceChoice.values),
             },
         ),
         "character": Character.objects.order_by("?").first(),
@@ -49,7 +51,7 @@ def get_random_characteristic():
         "baggage": create_random_characteristic(
             "Baggage",
             {
-                "status": secrets.choice(StatusBaggageChoice.values),
+                "status": random.choice(StatusBaggageChoice.values),
             },
         ),
     }
@@ -57,8 +59,13 @@ def get_random_characteristic():
 
 def create_random_characteristic(model: str, random_fields: dict[str, Any]) -> Model:
     model = apps.get_model("game", model)
-    characteristic_name = model.objects.order_by("?").first().name
-    random_characteristic = model.objects.create(name=characteristic_name)
+    characteristic_name = (
+        model.objects.filter(is_generated=False).order_by("?").first().name
+    )
+    random_characteristic = model.objects.create(
+        name=characteristic_name,
+        is_generated=True,
+    )
 
     for field, value in random_fields.items():
         if hasattr(random_characteristic, field):

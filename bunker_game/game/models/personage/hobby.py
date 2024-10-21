@@ -12,7 +12,9 @@ class Hobby(models.Model):
         choices=ExperienceChoice.choices,
         verbose_name="опыт хобби",
         blank=True,
+        default="",
     )
+    is_generated = models.BooleanField(default=False, verbose_name="сгенерирована")
 
     class Meta:
         verbose_name = "хобби"

@@ -7,7 +7,6 @@ class UserSerializer(serializers.ModelSerializer[User]):
     class Meta:
         model = User
         fields = (
-            "id",
             "uuid",
             "username",
             "name",
@@ -19,5 +18,9 @@ class UserSerializer(serializers.ModelSerializer[User]):
         )
 
         extra_kwargs = {
-            "url": {"view_name": "users:user-detail"},
+            "url": {"view_name": "users:user-detail", "lookup_field": "uuid"},
+            "avatar": {"read_only": True},
+            "date_joined": {"read_only": True},
+            "last_login": {"read_only": True},
+            "last_online": {"read_only": True},
         }

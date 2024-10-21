@@ -16,6 +16,7 @@ class Disease(models.Model):
         blank=True,
         verbose_name="можно вылечить",
     )
+    is_generated = models.BooleanField(default=False, verbose_name="сгенерирована")
 
     class Meta:
         verbose_name = "болезнь"

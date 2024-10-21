@@ -15,7 +15,6 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = (
-            "id",
             "uuid",
             "creator",
             "personages",

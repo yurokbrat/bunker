@@ -7,7 +7,7 @@ from bunker_game.game.models.action_card_usage import ActionCardUsage
 class ActionCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActionCard
-        fields = ("id", "uuid", "name", "key", "description", "target")
+        fields = ("uuid", "name", "key", "description", "target")
         read_only_fields = ("name", "key", "description", "target")
 
 

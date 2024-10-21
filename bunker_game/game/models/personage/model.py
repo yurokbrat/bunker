@@ -38,12 +38,14 @@ class Personage(models.Model):
     gender = models.CharField(
         choices=GenderChoice.choices,
         blank=True,
+        default="",
         verbose_name="пол",
     )
     orientation = models.CharField(
         choices=OrientationChoice.choices,
         verbose_name="ориентация",
         blank=True,
+        default="",
     )
     disease = models.ForeignKey(
         Disease,

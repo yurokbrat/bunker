@@ -13,7 +13,9 @@ class Baggage(models.Model):
         max_length=50,
         verbose_name="состояние",
         blank=True,
+        default="",
     )
+    is_generated = models.BooleanField(default=False, verbose_name="сгенерирована")
 
     class Meta:
         verbose_name = "багаж"

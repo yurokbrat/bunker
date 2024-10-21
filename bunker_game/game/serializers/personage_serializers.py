@@ -18,43 +18,43 @@ from bunker_game.users.serializers import UserSerializer
 class DiseaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Disease
-        fields = ("id", "uuid", "name", "degree_percent", "is_curable")
+        fields = ("uuid", "name", "degree_percent", "is_curable")
 
 
 class ProfessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession
-        fields = ("id", "uuid", "name", "experience")
+        fields = ("uuid", "name", "experience")
 
 
 class PhobiaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Phobia
-        fields = ("id", "uuid", "name", "stage")
+        fields = ("uuid", "name", "stage")
 
 
 class HobbySerializer(serializers.ModelSerializer):
     class Meta:
         model = Hobby
-        fields = ("id", "uuid", "name", "experience")
+        fields = ("uuid", "name", "experience")
 
 
 class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
-        fields = ("id", "uuid", "name")
+        fields = ("uuid", "name")
 
 
 class AdditionalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdditionalInfo
-        fields = ("id", "uuid", "name")
+        fields = ("uuid", "name")
 
 
 class BaggageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Baggage
-        fields = ("id", "uuid", "name", "status")
+        fields = ("uuid", "name", "status")
 
 
 class PersonageSerializer(serializers.ModelSerializer):
@@ -70,7 +70,6 @@ class PersonageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personage
         fields = (
-            "id",
             "uuid",
             "user",
             "age",
@@ -93,4 +92,4 @@ class PersonageRegenerateSerializer(serializers.Serializer):
 class CharacteristicVisibilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = CharacteristicVisibility
-        fields = ("id", "uuid", "characteristic_type", "is_hidden")
+        fields = ("uuid", "characteristic_type", "is_hidden")

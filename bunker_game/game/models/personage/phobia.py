@@ -13,7 +13,9 @@ class Phobia(models.Model):
         choices=PhobiaStageChoice.choices,
         verbose_name="стадия",
         blank=True,
+        default="",
     )
+    is_generated = models.BooleanField(default=False, verbose_name="сгенерирована")
 
     class Meta:
         verbose_name = "фобия"

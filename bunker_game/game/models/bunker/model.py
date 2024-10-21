@@ -13,6 +13,7 @@ class Bunker(models.Model):
         max_length=120,
         verbose_name="описание бункера",
         blank=True,
+        default="",
     )
     image = models.ImageField(
         upload_to=upload_to_bunkers,

@@ -12,7 +12,9 @@ class Profession(models.Model):
         choices=ExperienceChoice.choices,
         blank=True,
         verbose_name="опыт работы",
+        default="",
     )
+    is_generated = models.BooleanField(default=False, verbose_name="сгенерирована")
 
     class Meta:
         verbose_name = "профессия"

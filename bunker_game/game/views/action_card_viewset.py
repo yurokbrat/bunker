@@ -13,6 +13,7 @@ class ActionCardViewSet(
 ):
     queryset = ActionCard.objects.all()
     serializer_class = ActionCardSerializer
+    lookup_field = "uuid"
 
     @action(detail=False, methods=("GET",))
     def random(self, request, *args, **kwargs):

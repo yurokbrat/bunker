@@ -10,6 +10,7 @@ from bunker_game.game.models import (
     Catastrophe,
     Character,
     Disease,
+    Game,
     Hobby,
     Personage,
     Phobia,
@@ -63,3 +64,7 @@ class PersonageAdmin(ModelAdmin): ...
 
 @admin.register(ActionCard)
 class ActionCardAdmin(ModelAdmin): ...
+
+
+@admin.register(Game)
+class GameAdmin(ModelAdmin): ...
