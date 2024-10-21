@@ -9,6 +9,7 @@ class Phobia(models.Model):
         max_length=120,
         choices=PhobiaStageChoice.choices,
         verbose_name="стадия",
+        blank=True,
     )
 
     class Meta:

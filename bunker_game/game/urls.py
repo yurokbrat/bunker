@@ -1,8 +1,8 @@
 from django.urls import URLPattern, URLResolver, include, path
 from rest_framework_nested.routers import NestedSimpleRouter, SimpleRouter
 
-
 from bunker_game.game.views import BunkerViewSet, CatastropheViewSet, PersonageViewSet
+from bunker_game.game.views.action_card_viewset import ActionCardViewSet
 from bunker_game.game.views.game_viewset import GameViewSet
 
 router = SimpleRouter()
@@ -10,6 +10,8 @@ router = SimpleRouter()
 router.register("games", GameViewSet, basename="games")
 router.register("bunkers", BunkerViewSet)
 router.register("catastrophes", CatastropheViewSet)
+router.register("action-cards", ActionCardViewSet, basename="action-cards")
+
 
 personage_router = NestedSimpleRouter(router, "games", lookup="game")
 personage_router.register("personages", PersonageViewSet, basename="game-personages")

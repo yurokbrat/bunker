@@ -4,25 +4,23 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.db.models import Model, QuerySet
 from drf_spectacular.utils import extend_schema
-from rest_framework.generics import get_object_or_404
+from rest_framework import mixins, permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework import viewsets, mixins, permissions, status
-from rest_framework.decorators import action
 
-from bunker_game.game.models import Personage, CharacteristicVisibility
+from bunker_game.game.models import CharacteristicVisibility, Personage
 from bunker_game.game.serializers import PersonageSerializer
 from bunker_game.game.serializers.personage_serializers import (
-    PersonageGenerateSerializer,
-    PersonageRegenerateSerializer,
-    DiseaseSerializer,
-    ProfessionSerializer,
-    PhobiaSerializer,
-    HobbySerializer,
-    CharacterSerializer,
     AdditionalInfoSerializer,
     BaggageSerializer,
     CharacteristicVisibilitySerializer,
+    CharacterSerializer,
+    DiseaseSerializer,
+    HobbySerializer,
+    PersonageRegenerateSerializer,
+    PhobiaSerializer,
+    ProfessionSerializer,
 )
 from bunker_game.game.services.generate_personage_service import (
     GeneratePersonageService,
@@ -30,11 +28,12 @@ from bunker_game.game.services.generate_personage_service import (
 from bunker_game.game.services.regenerate_characteristic_service import (
     RegenerateCharacteristicService,
 )
-from bunker_game.users.models import User
 
 
 class PersonageViewSet(
-    mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
 ):
     queryset = Personage.objects.all()
     serializer_class = PersonageSerializer
@@ -44,21 +43,19 @@ class PersonageViewSet(
         game_id = self.kwargs.get("game_id")
         return Personage.objects.filter(games=game_id)
 
-    @extend_schema(responses=PersonageSerializer())
+    @extend_schema(request=None, responses=PersonageSerializer())
     @action(
-        detail=False,
+        detail=True,
         methods=("POST",),
         permission_classes=(permissions.IsAuthenticated,),
-        serializer_class=PersonageGenerateSerializer,
+        serializer_class=PersonageSerializer,
     )
     def generate(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        game_id = self.kwargs.get("game_id")
-        generate_serializer = PersonageGenerateSerializer(data=request.data)
-        generate_serializer.is_valid(raise_exception=True)
-        user = get_object_or_404(User, id=generate_serializer.validated_data["user_id"])
-        personage, created = GeneratePersonageService()(user, game_id)
+        personage = self.get_object()
+        personage, created = GeneratePersonageService()(personage.id)
         personage_serializer = PersonageSerializer(
-            instance=personage, context={"request": request}
+            instance=personage,
+            context={"request": request},
         )
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         return Response(personage_serializer.data, status=status_code)
@@ -75,7 +72,8 @@ class PersonageViewSet(
         characteristic = regenerate_serializer.validated_data["characteristic_type"]
         personage = self.get_object()
         new_characteristic = RegenerateCharacteristicService()(
-            personage, characteristic
+            personage,
+            characteristic,
         )
         if isinstance(new_characteristic, Model):
             serializers_map = {
@@ -89,10 +87,12 @@ class PersonageViewSet(
             }
             serializer = serializers_map.get(characteristic)
             new_characteristic = serializer(
-                instance=new_characteristic, context={"request": request}
+                instance=new_characteristic,
+                context={"request": request},
             )
             return Response(
-                {characteristic: new_characteristic.data}, status=status.HTTP_200_OK
+                {characteristic: new_characteristic.data},
+                status=status.HTTP_200_OK,
             )
         return Response({characteristic: new_characteristic}, status=status.HTTP_200_OK)
 
@@ -103,7 +103,10 @@ class PersonageViewSet(
         serializer_class=CharacteristicVisibilitySerializer,
     )
     def toggle_visibility(
-        self, request: Request, *args: Any, **kwargs: Any
+        self,
+        request: Request,
+        *args: Any,
+        **kwargs: Any,
     ) -> Response:
         game_id = self.kwargs.get("game_id")
         personage = self.get_object()

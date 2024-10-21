@@ -1,6 +1,8 @@
 from django.db import models
 
-from bunker_game.game.models import Bunker, Catastrophe, Personage
+from bunker_game.game.models import Catastrophe
+from bunker_game.game.models.bunker.model import Bunker
+from bunker_game.game.models.personage.model import Personage
 from bunker_game.users.models import User
 
 
@@ -18,7 +20,11 @@ class Game(models.Model):
         blank=True,
     )
     bunker = models.ForeignKey(
-        Bunker, on_delete=models.SET_NULL, verbose_name="бункер", null=True, blank=True
+        Bunker,
+        on_delete=models.SET_NULL,
+        verbose_name="бункер",
+        null=True,
+        blank=True,
     )
     catastrophe = models.ForeignKey(
         Catastrophe,
@@ -28,10 +34,15 @@ class Game(models.Model):
         blank=True,
     )
     date_start = models.DateTimeField(
-        auto_created=True, verbose_name="игра создана в ", null=True, blank=True
+        auto_created=True,
+        verbose_name="игра создана в ",
+        null=True,
+        blank=True,
     )
     date_end = models.DateTimeField(
-        null=True, blank=True, verbose_name="игра закончена в"
+        null=True,
+        blank=True,
+        verbose_name="игра закончена в",
     )
     is_active = models.BooleanField(default=False, verbose_name="активна")
 

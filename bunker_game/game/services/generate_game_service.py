@@ -1,7 +1,6 @@
 from django.utils import timezone
 
-from bunker_game.game.models import Game, Bunker, Catastrophe
-from bunker_game.users.models import User
+from bunker_game.game.models import Bunker, Catastrophe, Game
 
 
 class GenerateGameService:

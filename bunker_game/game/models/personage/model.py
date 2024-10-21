@@ -27,59 +27,66 @@ class Personage(models.Model):
         null=True,
         blank=True,
     )
-    age = models.PositiveSmallIntegerField(verbose_name="возраст", blank=True, null=True)
-    gender = models.CharField(choices=GenderChoice.choices, blank=True, null=True, verbose_name="пол")
+    age = models.PositiveSmallIntegerField(
+        verbose_name="возраст",
+        blank=True,
+        null=True,
+    )
+    gender = models.CharField(
+        choices=GenderChoice.choices,
+        blank=True,
+        verbose_name="пол",
+    )
     orientation = models.CharField(
         choices=OrientationChoice.choices,
         verbose_name="ориентация",
         blank=True,
-        null=True,
     )
     disease = models.ForeignKey(
         Disease,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         verbose_name="болезнь",
     )
     profession = models.ForeignKey(
         Profession,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         verbose_name="профессия",
     )
     phobia = models.ForeignKey(
         Phobia,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         verbose_name="фобия",
     )
     hobby = models.ForeignKey(
         Hobby,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         verbose_name="хобби",
     )
     character = models.ForeignKey(
         Character,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         verbose_name="характер",
     )
     additional_info = models.ForeignKey(
         AdditionalInfo,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         verbose_name="доп, информация",
     )
     baggage = models.ForeignKey(
         Baggage,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         verbose_name="багаж",

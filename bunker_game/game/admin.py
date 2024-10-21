@@ -2,6 +2,7 @@ from django.contrib import admin
 from unfold.admin import ModelAdmin
 
 from bunker_game.game.models import (
+    ActionCard,
     AdditionalInfo,
     Baggage,
     Bunker,
@@ -58,3 +59,7 @@ class AdditionalInfoAdmin(ModelAdmin): ...
 
 @admin.register(Personage)
 class PersonageAdmin(ModelAdmin): ...
+
+
+@admin.register(ActionCard)
+class ActionCardAdmin(ModelAdmin): ...

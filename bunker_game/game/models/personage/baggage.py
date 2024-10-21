@@ -4,11 +4,12 @@ from bunker_game.game.constants import StatusBaggageChoice
 
 
 class Baggage(models.Model):
-    name = models.CharField(max_length=100, unique=True, verbose_name="название")
+    name = models.CharField(max_length=100, verbose_name="название")
     status = models.CharField(
         choices=StatusBaggageChoice.choices,
         max_length=50,
         verbose_name="состояние",
+        blank=True,
     )
 
     class Meta:

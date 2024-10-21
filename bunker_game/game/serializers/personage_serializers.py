@@ -5,12 +5,12 @@ from bunker_game.game.models import (
     AdditionalInfo,
     Baggage,
     Character,
+    CharacteristicVisibility,
     Disease,
     Hobby,
     Personage,
     Phobia,
     Profession,
-    CharacteristicVisibility,
 )
 from bunker_game.users.serializers import UserSerializer
 
@@ -18,7 +18,7 @@ from bunker_game.users.serializers import UserSerializer
 class DiseaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Disease
-        fields = ("name", "degree", "is_curable")
+        fields = ("name", "degree_percent", "is_curable")
 
 
 class ProfessionSerializer(serializers.ModelSerializer):
@@ -83,10 +83,6 @@ class PersonageSerializer(serializers.ModelSerializer):
             "additional_info",
             "baggage",
         )
-
-
-class PersonageGenerateSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField()
 
 
 class PersonageRegenerateSerializer(serializers.Serializer):

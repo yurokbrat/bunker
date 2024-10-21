@@ -1,8 +1,12 @@
 from django.db import models
-from rest_framework import status, mixins
+from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin, \
-    DestroyModelMixin
+from rest_framework.mixins import (
+    CreateModelMixin,
+    DestroyModelMixin,
+    ListModelMixin,
+    RetrieveModelMixin,
+)
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -15,7 +19,7 @@ class UserViewSet(
     ListModelMixin,
     DestroyModelMixin,
     CreateModelMixin,
-    GenericViewSet
+    GenericViewSet,
 ):
     serializer_class = UserSerializer
     queryset = User.objects.all().order_by("last_online")
@@ -28,7 +32,7 @@ class UserViewSet(
     @action(detail=False)
     def free(self, request):
         free_users = User.objects.filter(
-            models.Q(personage__game__is_active=False)
+            models.Q(personage__game__is_active=False),
         )
         serializer = UserSerializer(free_users, context={"request": request}, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
@@ -36,19 +40,21 @@ class UserViewSet(
     @action(detail=False)
     def gaming(self, request):
         gaming_users = User.objects.filter(personage__game__is_active=True)
-        print(gaming_users)
 
         serializer = UserSerializer(
-            gaming_users, context={"request": request}, many=True
+            gaming_users,
+            context={"request": request},
+            many=True,
         )
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(detail=False)
     def creators(self, request):
         creator_users = User.objects.filter(game_creator__isnull=False)
-        print(creator_users)
 
         serializer = UserSerializer(
-            creator_users, context={"request": request}, many=True
+            creator_users,
+            context={"request": request},
+            many=True,
         )
         return Response(status=status.HTTP_200_OK, data=serializer.data)

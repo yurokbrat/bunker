@@ -2,7 +2,7 @@ from django.db import models
 
 
 class AdditionalInfo(models.Model):
-    name = models.CharField(max_length=100, verbose_name="название")
+    name = models.CharField(max_length=100, verbose_name="название", unique=True)
 
     class Meta:
         verbose_name = "доп. информация"

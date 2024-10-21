@@ -6,8 +6,17 @@ from bunker_game.utils.generate_hide_name import upload_to_bunkers
 
 class Bunker(models.Model):
     name = models.CharField(max_length=120, verbose_name="название", unique=True)
-    description = models.CharField(max_length=120, verbose_name="описание бункера", null=True, blank=True)
-    image = models.ImageField(upload_to=upload_to_bunkers, verbose_name="фотография", null=True, blank=True)
+    description = models.CharField(
+        max_length=120,
+        verbose_name="описание бункера",
+        blank=True,
+    )
+    image = models.ImageField(
+        upload_to=upload_to_bunkers,
+        verbose_name="фотография",
+        null=True,
+        blank=True,
+    )
     rooms = models.ManyToManyField(BunkerRoom, verbose_name="комнаты")
 
     class Meta:

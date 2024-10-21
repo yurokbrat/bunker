@@ -61,7 +61,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 # ------------------------------------------------------------------------------
 CHANNEL_REDIS_HOST = env.str("CHANNEL_REDIS_HOST")
 REDIS_CHANEL_SECRET_KEY = env.str(
-    "REDIS_CHANEL_SECRET_KEY", default="vHdmoWDMCIJJczyAKlvRDhAYygbqHejw"
+    "REDIS_CHANEL_SECRET_KEY",
+    default="vHdmoWDMCIJJczyAKlvRDhAYygbqHejw",
 )
 ASGI_APPLICATION = "config.asgi.application"
 CHANNEL_LAYERS = {

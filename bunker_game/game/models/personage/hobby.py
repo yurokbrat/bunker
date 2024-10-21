@@ -4,10 +4,11 @@ from bunker_game.game.constants import ExperienceChoice
 
 
 class Hobby(models.Model):
-    name = models.CharField(max_length=120, unique=True, verbose_name="название")
+    name = models.CharField(max_length=120, verbose_name="название")
     experience = models.CharField(
         choices=ExperienceChoice.choices,
         verbose_name="опыт хобби",
+        blank=True,
     )
 
     class Meta:

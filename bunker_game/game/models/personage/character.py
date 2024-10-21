@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Character(models.Model):
-    name = models.CharField(max_length=120, verbose_name="название")
+    name = models.CharField(max_length=120, unique=True, verbose_name="название")
 
     class Meta:
         verbose_name = "характер"

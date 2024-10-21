@@ -1,15 +1,6 @@
-import random
-
-from bunker_game.game.constants import GenderChoice, OrientationChoice
-from bunker_game.game.models import (
-    Personage,
-    Disease,
-    Profession,
-    Phobia,
-    Hobby,
-    Character,
-    AdditionalInfo,
-    Baggage,
+from bunker_game.game.models import Personage
+from bunker_game.game.services.create_random_characteristic import (
+    get_random_characteristic,
 )
 
 
@@ -24,20 +15,5 @@ class RegenerateCharacteristicService:
         return new_value
 
     def _get_new_value(self, characteristic: str):
-        if characteristic == "age":
-            return random.randint(10, 50)
-        elif characteristic == "gender":
-            return random.choice(GenderChoice.values)
-        elif characteristic == "orientation":
-            return random.choice(OrientationChoice.values)
-        else:
-            model_map = {
-                "disease": Disease,
-                "profession": Profession,
-                "phobia": Phobia,
-                "hobby": Hobby,
-                "character": Character,
-                "additional_info": AdditionalInfo,
-                "baggage": Baggage,
-            }
-            return model_map[characteristic].objects.order_by("?").first()
+        characteristic_map = get_random_characteristic()
+        return characteristic_map[characteristic]
