@@ -13,6 +13,7 @@ class User(AbstractUser):
         blank=True,
         upload_to=upload_to_avatars,
         verbose_name="аватар",
+        default="user-avatars/default.png",
     )
     last_online = models.DateTimeField(
         blank=True,

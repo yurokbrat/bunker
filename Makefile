@@ -54,9 +54,11 @@ manage: ## Run manage command. Use quotes for commands with -flags or special sy
 run: ## Run command within the container. Use quotes for commands with -flags or special symbols
 	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) $(filter-out $@,$(MAKECMDGOALS))
 
-generate:
+generate: ## Generate default objects for bunker game
 	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py create_default_bunkers
 	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py create_default_characteristics
+	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py create_default_catastrophes
 
-create-admin:
+
+create-admin: ## Create admin
 	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py createsuperuser

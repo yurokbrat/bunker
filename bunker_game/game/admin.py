@@ -19,7 +19,11 @@ from bunker_game.game.models import (
 
 
 @admin.register(Catastrophe)
-class CatastropheAdmin(ModelAdmin): ...
+class CatastropheAdmin(ModelAdmin):
+    ordering = ("name",)
+
+    def get_queryset(self, request):
+        return Catastrophe.objects.filter(is_generated=False)
 
 
 @admin.register(BunkerRoom)
@@ -27,7 +31,11 @@ class BunkerRoomAdmin(ModelAdmin): ...
 
 
 @admin.register(Bunker)
-class BunkerAdmin(ModelAdmin): ...
+class BunkerAdmin(ModelAdmin):
+    ordering = ("name",)
+
+    def get_queryset(self, request):
+        return Bunker.objects.filter(is_generated=False)
 
 
 @admin.register(Disease)

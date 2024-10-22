@@ -9,7 +9,7 @@ from bunker_game.utils.generate_hide_name import upload_to_catastrophes
 class Catastrophe(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100, verbose_name="название")
-    description = models.CharField(max_length=250, verbose_name="описание")
+    description = models.CharField(max_length=500, verbose_name="описание")
     image = models.ImageField(
         upload_to=upload_to_catastrophes,
         verbose_name="фотография",
@@ -20,6 +20,10 @@ class Catastrophe(models.Model):
         help_text="Урон катастрофы по пятибалльной шкале",
         validators=(MinValueValidator(1), MaxValueValidator(5)),
     )
+    percent_population = models.IntegerField(
+        verbose_name="процент выжившего населения", blank=True, null=True,
+    )
+    is_generated = models.BooleanField(default=False, verbose_name="сгенерирован")
 
     class Meta:
         verbose_name = "катастрофа"
