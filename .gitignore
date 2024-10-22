@@ -329,7 +329,7 @@ dump.rdb
 bunker_game/media/
 !bunker_game/media/bunkers/default_images/*
 !bunker_game/media/catastrophes/default_images/*
-!bunker_game/media/users/default_avatar/default_image.png
+!bunker_game/media/user-avatars/default.png
 
 .pytest_cache/
 .ipython/
