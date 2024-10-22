@@ -227,6 +227,7 @@ STORAGES = {
 }
 
 MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+MEDIA_ROOT = f"{APPS_DIR / "media"}"
 
 # # MEDIA
 # # ------------------------------------------------------------------------------

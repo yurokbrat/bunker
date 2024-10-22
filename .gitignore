@@ -327,6 +327,7 @@ dump.rdb
 
 ### Project template
 bunker_game/media/
+!bunker_game/media/bunkers/default_images/*
 
 .pytest_cache/
 .ipython/

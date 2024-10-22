@@ -8,7 +8,7 @@ from bunker_game.game.serializers.bunker_serializers import BunkerRoomsSerialize
 
 
 class BunkerViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Bunker.objects.all()
+    queryset = Bunker.objects.filter(is_generated=False)
     serializer_class = BunkerSerializer
     lookup_field = "uuid"
 

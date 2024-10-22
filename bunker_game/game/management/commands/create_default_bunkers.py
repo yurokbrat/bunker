@@ -1,5 +1,8 @@
+from pathlib import Path
 from typing import Any
 
+from django.conf import settings
+from django.core.files.base import File
 from django.core.management import BaseCommand
 from django.db import transaction
 
@@ -72,117 +75,96 @@ class Command(BaseCommand):
             "Советский бункер": {
                 "description": "Секретное укрытие, построенное во "
                 "времена холодной войны.",
-                "image": None,
+                "file_name": "soviet_bunker.jpg",
             },
             "Бункер времён второй мировой": {
                 "description": "Бункер, использовавшийся для защиты от ядерной атаки.",
-                "image": None,
+                "file_name": "bunker_second_world_war.jpg",
             },
             "Шахта": {
                 "description": "Подземное хранилище ресурсов и оборудования.",
-                "image": None,
+                "file_name": "mine.jpg",
             },
             "Бункер лаборатории СССР": {
                 "description": "Место, где проводились эксперименты во время войны.",
-                "image": None,
+                "file_name": "soviet_laboratory.jpg",
             },
             "Военная база": {
                 "description": "Запасной штаб для военного командования.",
-                "image": None,
+                "file_name": "military_base.jpg",
             },
             "Тюрьма": {
-                "description": "Тюрьма с высокими стенами и охраной.",
-                "image": None,
+                "description": "Тюрьма с высокими стенами.",
+                "file_name": "jail.jpg",
             },
             "Правительственный бункер": {
                 "description": "Бункер, предназначенный для "
                 "защиты высокопоставленных лиц.",
-                "image": None,
+                "file_name": "government.jpg",
             },
             "Поликлиника": {
                 "description": "Специально оборудованный пункт для "
                 "оказания медицинской помощи.",
-                "image": None,
+                "file_name": "medicine.jpg",
             },
             "Ферма": {
                 "description": "Ферма, использующая современные технологии "
                 "для сельского хозяйства.",
-                "image": None,
+                "file_name": "farm.jpg",
             },
             "Продуктовый магазин": {
                 "description": "Торговая точка, где можно было "
                 "купить запасы продовольствия.",
-                "image": None,
+                "file_name": "shop.jpg",
             },
             "Оружейный магазин": {
                 "description": "Место для покупки оборудования "
                 "для охоты и отдыха на природе.",
-                "image": None,
-            },
-            "Научный центр": {
-                "description": "Подземная лаборатория для научных исследований.",
-                "image": None,
-            },
-            "Бункер подводных лодок": {
-                "description": "Подводный укрытие для защиты от внешних угроз.",
-                "image": None,
-            },
-            "Подземная лаборатория": {
-                "description": "Военная база с необходимыми ресурсами.",
-                "image": None,
+                "file_name": "weapon_shop.jpg",
             },
             "Распределительный центр маркетплейса": {
                 "description": "Промышленный склад для хранения товаров.",
-                "image": None,
-            },
-            "Сервисный центр": {
-                "description": "Современный сервис для ремонта техники.",
-                "image": None,
+                "file_name": "marketplace.jpg",
             },
             "Станция метро": {
                 "description": "Общедоступное место для работы метро в прошлом.",
-                "image": None,
+                "file_name": "metro.jpg",
             },
             "Банковский склад": {
                 "description": "Место для хранения денег и ценностей.",
-                "image": None,
+                "file_name": "bank.jpg",
             },
-            "Гражданский бункер": {
-                "description": "Бункер, предназначенный для защиты "
-                "гражданского населения.",
-                "image": None,
-            },
-            "Промышленный склад": {
-                "description": "Склад для хранения промышленных товаров.",
-                "image": None,
+            "Промышленный завод": {
+                "description": "Завод для создания промышленных товаров.",
+                "file_name": "factory.jpg",
             },
             "Автосервис": {
                 "description": "Сервисный центр для автомобилей.",
-                "image": None,
+                "file_name": "car_service.jpg",
             },
             "Дом культуры": {
                 "description": "Место для проведения культурных мероприятий.",
-                "image": None,
+                "file_name": "house_culture.jpg",
             },
             "Санаторий": {
                 "description": "Медицинское учреждение для отдыха и восстановления.",
-                "image": None,
+                "file_name": "sanatorium.jpg",
             },
             "Водоочистное сооружение": {
                 "description": "Установка для очистки воды.",
-                "image": None,
+                "file_name": "water_cleaner.jpg",
             },
             "Небольшой многоэтажный дом": {
                 "description": "Многоэтажное здание для проживания.",
-                "image": None,
+                "file_name": "house.jpg",
             },
             "Частный дом": {
                 "description": "Жилое здание для одной семьи.",
-                "image": None,
+                "file_name": "mini_house.jpg",
             },
             "Хозяйственный магазин": {
                 "description": "Магазин, продающий товары для домашнего хозяйства.",
-                "image": None,
+                "file_name": "hardware_store.jpg",
             },
         }
 
@@ -191,9 +173,15 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Комнаты бункеров созданы!"))
 
         for bunker_name, info in bunker_info.items():
-            Bunker.objects.filter(is_generated=False).get_or_create(
-                name=bunker_name,
-                description=info["description"],
-                image=info["image"],
+            base_file_path = Path(
+                "bunkers",
+                "default_images",
             )
+            image_path = base_file_path / info.pop("file_name")
+            with (settings.MEDIA_ROOT / image_path).open("rb") as image_file:
+                Bunker.objects.filter(is_generated=False).get_or_create(
+                    name=bunker_name,
+                    description=info["description"],
+                    image=File(image_file),
+                )
         self.stdout.write(self.style.SUCCESS("Стандартные бункеры созданы!"))
