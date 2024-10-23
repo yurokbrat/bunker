@@ -25,5 +25,5 @@ class ActionCard(models.Model):
         verbose_name = "карта действия"
         verbose_name_plural = "карты действия"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

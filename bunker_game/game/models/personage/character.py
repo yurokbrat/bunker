@@ -11,5 +11,5 @@ class Character(models.Model):
         verbose_name = "характер"
         verbose_name_plural = "характеры"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

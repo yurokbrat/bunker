@@ -53,5 +53,5 @@ class Game(models.Model):
         verbose_name = "игра"
         verbose_name_plural = "игры"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Игра №{self.id}"

@@ -101,5 +101,5 @@ class Personage(models.Model):
         verbose_name = "персонаж"
         verbose_name_plural = "персонажи"
 
-    def __str__(self):
-        return f"Персонаж {self.user.username}"
+    def __str__(self) -> str:
+        return f"Персонаж {self.user}"

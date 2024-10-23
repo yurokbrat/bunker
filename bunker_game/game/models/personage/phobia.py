@@ -21,5 +21,5 @@ class Phobia(models.Model):
         verbose_name = "фобия"
         verbose_name_plural = "фобии"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}"

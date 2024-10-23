@@ -1,5 +1,8 @@
+from typing import Any
+
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from bunker_game.game.models import Bunker
@@ -13,7 +16,7 @@ class BunkerViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = "uuid"
 
     @action(detail=True, methods=("GET",), serializer_class=BunkerRoomsSerializer)
-    def rooms(self, request, *args, **kwargs):
+    def rooms(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         bunker: Bunker = self.get_object()
         serializer = BunkerRoomsSerializer(
             instance=bunker.rooms,

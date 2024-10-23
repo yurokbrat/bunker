@@ -40,9 +40,10 @@ class PersonageViewSet(
     lookup_url_kwarg = "personage_uuid"
     lookup_field = "uuid"
 
-    def get_queryset(self) -> QuerySet:
-        game_uuid = self.kwargs.get("game_uuid")
-        return Personage.objects.filter(games__uuid=game_uuid)
+    def get_queryset(self) -> QuerySet[Personage]:
+        if game_uuid := self.kwargs.get("game_uuid"):
+            return Personage.objects.filter(games__uuid=game_uuid)
+        return Personage.objects.none()
 
     @extend_schema(request=None, responses=PersonageSerializer())
     @action(
@@ -86,13 +87,13 @@ class PersonageViewSet(
                 "additional_info": AdditionalInfoSerializer,
                 "baggage": BaggageSerializer,
             }
-            serializer = serializers_map.get(characteristic)
-            new_characteristic = serializer(
+            serializer_type = serializers_map[characteristic]
+            serializer = serializer_type(
                 instance=new_characteristic,
                 context={"request": request},
             )
             return Response(
-                {characteristic: new_characteristic.data},
+                {characteristic: serializer.data},
                 status=status.HTTP_200_OK,
             )
         return Response({characteristic: new_characteristic}, status=status.HTTP_200_OK)
@@ -117,7 +118,7 @@ class PersonageViewSet(
             personage=personage,
             characteristic_type=characteristic_type,
         )
-        visibility.is_hidden = is_hidden
+        visibility.is_hidden = is_hidden  # type: ignore[assignment]
         visibility.save()
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(

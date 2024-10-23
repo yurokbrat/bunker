@@ -21,5 +21,5 @@ class Baggage(models.Model):
         verbose_name = "багаж"
         verbose_name_plural = "багажи"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}"

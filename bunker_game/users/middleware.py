@@ -1,13 +1,17 @@
+from collections.abc import Callable
+
+from django.core.handlers.asgi import ASGIRequest
 from django.utils import timezone
+from requests import Response
 
 from bunker_game.users.models import User
 
 
 class UpdateLastOnlineMiddleware:
-    def __init__(self, get_response):
+    def __init__(self, get_response: Callable) -> None:
         self.get_response = get_response
 
-    def __call__(self, request):
+    def __call__(self, request: ASGIRequest) -> Response:
         assert hasattr(
             request,
             "user",

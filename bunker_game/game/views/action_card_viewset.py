@@ -1,5 +1,8 @@
+from typing import Any
+
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from bunker_game.game.models.action_card import ActionCard
@@ -16,7 +19,7 @@ class ActionCardViewSet(
     lookup_field = "uuid"
 
     @action(detail=False, methods=("GET",))
-    def random(self, request, *args, **kwargs):
+    def random(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         action_card = ActionCard.objects.order_by("?").first()
         serializer = ActionCardSerializer(
             instance=action_card,

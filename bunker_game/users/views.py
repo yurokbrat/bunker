@@ -1,3 +1,5 @@
+from typing import Any
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
@@ -7,6 +9,7 @@ from rest_framework.mixins import (
     ListModelMixin,
     RetrieveModelMixin,
 )
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -29,6 +32,6 @@ class UserViewSet(
     filterset_class = UserFilter
 
     @action(detail=False)
-    def me(self, request):
-        serializer = UserSerializer(request.user, context={"request": request})
+    def me(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        serializer = UserSerializer(request.user, context={"request": request})  # type: ignore[arg-type]
         return Response(status=status.HTTP_200_OK, data=serializer.data)

@@ -34,5 +34,5 @@ class ActionCardUsage(models.Model):
     class Meta:
         unique_together = ("card", "personage", "game")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.card} - {self.personage} - {self.game}"

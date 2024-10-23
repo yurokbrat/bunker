@@ -1,3 +1,5 @@
+from typing import Any
+
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
@@ -34,8 +36,8 @@ class GameViewSet(
         permission_classes=(IsAuthenticated,),
         serializer_class=None,
     )
-    def new(self, request, *args, **kwargs):
-        game = Game.objects.create(creator=request.user)
+    def new(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        game = Game.objects.create(creator=request.user)  # type: ignore[misc]
         serializer = GameSerializer(instance=game, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -45,7 +47,7 @@ class GameViewSet(
         methods=("POST",),
         permission_classes=(IsAuthenticated,),
     )
-    def start(self, request, *args, **kwargs):
+    def start(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
         if game.is_active:
             return Response(data="Игра уже начата", status=status.HTTP_400_BAD_REQUEST)
@@ -61,7 +63,7 @@ class GameViewSet(
         permission_classes=(IsAuthenticated,),
         serializer_class=None,
     )
-    def connect(self, request, *args, **kwargs):
+    def connect(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
         personage, created = Personage.objects.get_or_create(
             user=request.user,
@@ -79,7 +81,7 @@ class GameViewSet(
         permission_classes=(IsAuthenticated,),
         serializer_class=None,
     )
-    def stop(self, request: Request, *args, **kwargs):
+    def stop(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
         # TODO: Сделать заморозку игры на сутки
         game.delete()
@@ -92,7 +94,7 @@ class GameViewSet(
         serializer_class=UseActionCardSerializer,
         url_path="use-action-card",
     )
-    def use_action_card(self, request: Request, *args, **kwargs):
+    def use_action_card(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         action_card = get_object_or_404(ActionCardUsage, card__key=request.data["key"])
         action_card.is_used = True
         action_card.save()

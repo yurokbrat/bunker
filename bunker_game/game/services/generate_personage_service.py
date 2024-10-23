@@ -7,7 +7,7 @@ from bunker_game.game.services.create_random_characteristic import (
 
 
 class GeneratePersonageService:
-    def __call__(self, personage_id: int) -> Personage:
+    def __call__(self, personage_id: int) -> tuple[Personage, bool]:
         personage_data = get_random_characteristic()
         return Personage.objects.update_or_create(
             id=personage_id,

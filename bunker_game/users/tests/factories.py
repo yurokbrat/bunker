@@ -13,7 +13,7 @@ class UserFactory(DjangoModelFactory[User]):
     name = Faker("name")
 
     @post_generation
-    def password(self, create: bool, extracted: Sequence[Any], **kwargs):  # noqa: FBT001
+    def password(self, create: bool, extracted: Sequence[Any], **kwargs: Any) -> None:  # noqa: FBT001
         password = (
             extracted
             if extracted
@@ -29,7 +29,12 @@ class UserFactory(DjangoModelFactory[User]):
         self.set_password(password)
 
     @classmethod
-    def _after_postgeneration(cls, instance, create, results=None):
+    def _after_postgeneration(
+        cls,
+        instance: User,
+        create: bool,  # noqa: FBT001
+        results: None = None,
+    ) -> None:
         """Save again the instance if creating and at least one hook ran."""
         if create and results and not cls._meta.skip_postgeneration_save:
             # Some post-generation hooks ran, and may have modified us.

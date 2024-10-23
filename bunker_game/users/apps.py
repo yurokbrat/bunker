@@ -7,6 +7,6 @@ class UsersConfig(AppConfig):
     name = "bunker_game.users"
     verbose_name = "Пользователи"
 
-    def ready(self):
+    def ready(self) -> None:
         with contextlib.suppress(ImportError):
             import bunker_game.users.signals  # noqa: F401

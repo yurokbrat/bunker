@@ -1,29 +1,29 @@
 import json
 
-from channels.exceptions import DenyConnection
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
+
+from bunker_game.game.models import Personage
 
 
 class PersonageConsumer(AsyncWebsocketConsumer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
-        self.game = None
-        self.game_name = None
-        self.room = None
-        self.personage = None
-        self.personage_id = None
-        self.game_uuid = None
+    def __init__(self, *args: tuple, **kwargs: dict) -> None:
+        super().__init__(*args, **kwargs)
+        self.game: str | None = None
+        self.game_name: str | None = None
+        self.room: str | None = None
+        self.personage: Personage | None = None
+        self.personage_id: int | None = None
+        self.game_uuid: str | None = None
 
-    async def connect(self):
+    async def connect(self) -> None:
         self.game_uuid = self.scope["url_route"]["kwargs"]["game_uuid"]
         try:
-            Personage = apps.get_model("game", "Personage")
             self.personage = await Personage.objects.aget(games=self.game_uuid)
             self.personage_id = self.personage.id
         except ObjectDoesNotExist:
-            await DenyConnection(f"Game for personage {self.personage_id} not found")
+            await self.close()
+            return
 
         self.game_name = f"game_{self.game_uuid}"
 
@@ -31,7 +31,7 @@ class PersonageConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-    async def receive(self, text_data):
+    async def receive(self, text_data: str) -> None:
         await self.channel_layer.group_send(
             self.game_name,
             {
@@ -40,7 +40,7 @@ class PersonageConsumer(AsyncWebsocketConsumer):
             },
         )
 
-    async def update_characteristics(self, event):
+    async def update_characteristics(self, event: dict) -> None:
         personage_id = event["personage_id"]
         characteristic_type = event.get("characteristic_type")
         is_hidden = event.get("is_hidden")
@@ -55,5 +55,5 @@ class PersonageConsumer(AsyncWebsocketConsumer):
             ),
         )
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code: int) -> None:
         await self.channel_layer.group_discard(self.game_name, self.channel_name)

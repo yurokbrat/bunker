@@ -1,4 +1,3 @@
-import secrets
 from typing import Any
 
 from django.apps import apps
@@ -12,11 +11,10 @@ from bunker_game.game.constants import (
     StatusBaggageChoice,
 )
 from bunker_game.game.models import AdditionalInfo, Character
+from bunker_game.utils.get_random import random
 
-random = secrets.SystemRandom()
 
-
-def get_random_characteristic():
+def get_random_characteristic() -> dict[str, Any]:
     return {
         "age": random.randint(15, 60),
         "gender": random.choice(GenderChoice.values),
@@ -25,7 +23,7 @@ def get_random_characteristic():
             "Disease",
             {
                 "degree_percent": random.randint(10, 100),
-                "is_curable": secrets.choice([True, False]),
+                "is_curable": random.choice([True, False]),
             },
         ),
         "profession": create_random_characteristic(

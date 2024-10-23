@@ -28,5 +28,5 @@ class Bunker(models.Model):
         verbose_name = "бункер"
         verbose_name_plural = "бункеры"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

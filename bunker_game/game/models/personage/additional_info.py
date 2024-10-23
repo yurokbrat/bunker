@@ -11,5 +11,5 @@ class AdditionalInfo(models.Model):
         verbose_name = "доп. информация"
         verbose_name_plural = verbose_name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

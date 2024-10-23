@@ -24,5 +24,5 @@ class CharacteristicVisibility(models.Model):
     class Meta:
         unique_together = ("personage", "characteristic_type")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.personage} - {self.characteristic_type}"

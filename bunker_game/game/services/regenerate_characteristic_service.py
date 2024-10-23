@@ -1,3 +1,5 @@
+from django.db.models import Model
+
 from bunker_game.game.models import Personage
 from bunker_game.game.services.create_random_characteristic import (
     get_random_characteristic,
@@ -5,7 +7,7 @@ from bunker_game.game.services.create_random_characteristic import (
 
 
 class RegenerateCharacteristicService:
-    def __call__(self, personage: Personage, characteristic: str):
+    def __call__(self, personage: Personage, characteristic: str) -> int | Model | list:
         old_value = getattr(personage, characteristic)
         new_value = self._get_new_value(characteristic)
         while old_value == new_value:
@@ -14,6 +16,6 @@ class RegenerateCharacteristicService:
         personage.save()
         return new_value
 
-    def _get_new_value(self, characteristic: str):
+    def _get_new_value(self, characteristic: str) -> int | Model | list:
         characteristic_map = get_random_characteristic()
         return characteristic_map[characteristic]

@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.core.handlers.asgi import ASGIRequest
+from django.db.models import QuerySet
 from unfold.admin import ModelAdmin
 
 from bunker_game.game.models import (
@@ -22,7 +24,7 @@ from bunker_game.game.models import (
 class CatastropheAdmin(ModelAdmin):
     ordering = ("name",)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: ASGIRequest) -> QuerySet[Catastrophe]:
         return Catastrophe.objects.filter(is_generated=False)
 
 
@@ -34,7 +36,7 @@ class BunkerRoomAdmin(ModelAdmin): ...
 class BunkerAdmin(ModelAdmin):
     ordering = ("name",)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: ASGIRequest) -> QuerySet[Bunker]:
         return Bunker.objects.filter(is_generated=False)
 
 
@@ -42,7 +44,7 @@ class BunkerAdmin(ModelAdmin):
 class DiseaseAdmin(ModelAdmin):
     ordering = ("name",)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: ASGIRequest) -> QuerySet[Disease]:
         return Disease.objects.filter(is_generated=False)
 
 
@@ -50,7 +52,7 @@ class DiseaseAdmin(ModelAdmin):
 class HobbyAdmin(ModelAdmin):
     ordering = ("name",)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: ASGIRequest) -> QuerySet[Hobby]:
         return Hobby.objects.filter(is_generated=False)
 
 
@@ -58,7 +60,7 @@ class HobbyAdmin(ModelAdmin):
 class PhobiaAdmin(ModelAdmin):
     ordering = ("name",)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: ASGIRequest) -> QuerySet[Phobia]:
         return Phobia.objects.filter(is_generated=False)
 
 
@@ -66,7 +68,7 @@ class PhobiaAdmin(ModelAdmin):
 class ProfessionAdmin(ModelAdmin):
     ordering = ("name",)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: ASGIRequest) -> QuerySet[Profession]:
         return Profession.objects.filter(is_generated=False)
 
 
@@ -74,7 +76,7 @@ class ProfessionAdmin(ModelAdmin):
 class BaggageAdmin(ModelAdmin):
     ordering = ("name",)
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: ASGIRequest) -> QuerySet[Baggage]:
         return Baggage.objects.filter(is_generated=False)
 
 

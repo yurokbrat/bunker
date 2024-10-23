@@ -16,5 +16,5 @@ class BunkerRoom(models.Model):
         verbose_name = "комната бункера"
         verbose_name_plural = "комнаты бункеров"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

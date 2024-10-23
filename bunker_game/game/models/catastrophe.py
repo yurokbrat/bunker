@@ -21,7 +21,9 @@ class Catastrophe(models.Model):
         validators=(MinValueValidator(1), MaxValueValidator(5)),
     )
     percent_population = models.IntegerField(
-        verbose_name="процент выжившего населения", blank=True, null=True,
+        verbose_name="процент выжившего населения",
+        blank=True,
+        null=True,
     )
     is_generated = models.BooleanField(default=False, verbose_name="сгенерирован")
 
@@ -29,5 +31,5 @@ class Catastrophe(models.Model):
         verbose_name = "катастрофа"
         verbose_name_plural = "катастрофы"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

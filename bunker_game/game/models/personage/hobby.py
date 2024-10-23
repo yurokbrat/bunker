@@ -20,5 +20,5 @@ class Hobby(models.Model):
         verbose_name = "хобби"
         verbose_name_plural = verbose_name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}"
