@@ -55,10 +55,13 @@ run: ## Run command within the container. Use quotes for commands with -flags or
 	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) $(filter-out $@,$(MAKECMDGOALS))
 
 generate: ## Generate default objects for bunker game
-	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py create_default_bunkers
-	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py create_default_characteristics
-	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py create_default_catastrophes
-
+	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) sh -c "\
+		python -c 'print(\"\\033[33mГенерация началась...\\033[0m\")' && \
+		python manage.py create_default_bunkers && \
+		python manage.py create_default_characteristics && \
+		python manage.py create_default_catastrophes && \
+		python manage.py create_default_action_cards && \
+		python -c 'print(\"\\033[32mГенерация выполнилась успешно!\\033[0m\")'"
 
 create-admin: ## Create admin
 	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py createsuperuser

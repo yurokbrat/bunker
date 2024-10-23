@@ -168,7 +168,7 @@ class Command(BaseCommand):
 
         for name, area in bunker_rooms.items():
             BunkerRoom.objects.get_or_create(name=name, area=area)
-        self.stdout.write(self.style.SUCCESS("Комнаты бункеров созданы!"))
+        self.stdout.write(self.style.SUCCESS("... Комнаты бункеров созданы ..."))
 
         for bunker_name, info in bunker_info.items():
             base_file_path = Path(
@@ -182,4 +182,4 @@ class Command(BaseCommand):
                     description=info["description"],
                     image=File(image_file),
                 )
-        self.stdout.write(self.style.SUCCESS("Стандартные бункеры созданы!"))
+        self.stdout.write(self.style.SUCCESS("... Бункеры созданы ..."))

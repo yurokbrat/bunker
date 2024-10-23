@@ -575,11 +575,5 @@ class Command(BaseCommand):
                         is_generated=False,
                         additional_skill=skill,
                     )
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"..... "
-                    f"{model._meta.verbose_name_plural.capitalize()} "  # noqa: SLF001
-                    f"созданы .....",
-                ),
-            )
-        self.stdout.write(self.style.SUCCESS("Стандартные характеристики созданы!"))
+            model_name = model._meta.verbose_name_plural.capitalize()  # noqa: SLF001
+            self.stdout.write(self.style.SUCCESS(f"... {model_name} созданы ..."))

@@ -188,4 +188,4 @@ class Command(BaseCommand):
                     name=catastrophe_data["name"],
                     defaults=catastrophe_data,
                 )
-        self.stdout.write(self.style.SUCCESS("Стандартные катастрофы созданы!"))
+        self.stdout.write(self.style.SUCCESS("... Катастрофы созданы ..."))
