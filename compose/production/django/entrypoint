@@ -8,6 +8,8 @@ set -o nounset
 
 # N.B. If only .env files supported variable expansion...
 export CELERY_BROKER_URL="${REDIS_URL}"
+export BUILD_ID=$(uuidgen)
+export BUILD_DATE=$(date "+%Y-%m-%d %H:%M:%S")
 
 
 if [ -z "${POSTGRES_USER}" ]; then

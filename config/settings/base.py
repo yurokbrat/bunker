@@ -408,3 +408,7 @@ SPECTACULAR_SETTINGS = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+# Build info
+# ------------------------------------------------------------------------------
+BUILD_ID = env.str("BUILD_ID", default="No Build ID")
+BUILD_DATE = env.str("BUILD_DATE", default="No Build Date")
