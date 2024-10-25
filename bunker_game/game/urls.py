@@ -1,9 +1,13 @@
 from django.urls import URLPattern, URLResolver, include, path
 from rest_framework_nested.routers import NestedSimpleRouter, SimpleRouter
 
-from bunker_game.game.views import BunkerViewSet, CatastropheViewSet, PersonageViewSet
-from bunker_game.game.views.action_card_viewset import ActionCardViewSet
-from bunker_game.game.views.game_viewset import GameViewSet
+from bunker_game.game.views import (
+    ActionCardViewSet,
+    BunkerViewSet,
+    CatastropheViewSet,
+    GameViewSet,
+    PersonageViewSet,
+)
 
 router = SimpleRouter()
 

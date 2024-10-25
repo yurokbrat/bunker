@@ -5,11 +5,12 @@ from rest_framework import serializers
 
 from bunker_game.game.constants import ActionCardTargetChoice, GameDurationType
 from bunker_game.game.models.game import Game
-from bunker_game.game.serializers import BunkerSerializer, PersonageSerializer
-from bunker_game.game.serializers.action_card_serializers import (
+from bunker_game.game.serializers import (
     ActionCardSerializer,
+    BunkerSerializer,
+    CatastropheSerializer,
 )
-from bunker_game.game.serializers.catastrophe_serializers import CatastropheSerializer
+from bunker_game.game.serializers.personage_serializers import PersonageSerializer
 from bunker_game.users.serializers import UserSerializer
 
 

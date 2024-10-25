@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from bunker_game.game.constants import TypeCharacteristic
-from bunker_game.game.models.action_card import ActionCard
-from bunker_game.game.models.action_card_usage import ActionCardUsage
+from bunker_game.game.models import ActionCard, ActionCardUsage
 
 
 class ActionCardSerializer(serializers.ModelSerializer):

@@ -6,8 +6,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from bunker_game.game.models import Bunker
-from bunker_game.game.serializers import BunkerSerializer
-from bunker_game.game.serializers.bunker_serializers import BunkerRoomsSerializer
+from bunker_game.game.serializers import BunkerRoomsSerializer, BunkerSerializer
 
 
 class BunkerViewSet(viewsets.ReadOnlyModelViewSet):

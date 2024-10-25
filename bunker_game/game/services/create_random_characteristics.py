@@ -10,8 +10,13 @@ from bunker_game.game.constants import (
     PhobiaStageChoice,
     StatusBaggageChoice,
 )
-from bunker_game.game.models import ActionCard, AdditionalInfo, Character, Personage
-from bunker_game.game.models.action_card_usage import ActionCardUsage
+from bunker_game.game.models import (
+    ActionCard,
+    ActionCardUsage,
+    AdditionalInfo,
+    Character,
+    Personage,
+)
 from bunker_game.utils.get_random import random
 
 

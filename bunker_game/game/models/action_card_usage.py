@@ -2,8 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.models import Game, Personage
-from bunker_game.game.models.action_card import ActionCard
+from bunker_game.game.models import ActionCard
 
 
 class ActionCardUsage(models.Model):
@@ -14,7 +13,7 @@ class ActionCardUsage(models.Model):
         verbose_name="карта",
     )
     personage = models.ForeignKey(
-        Personage,
+        "game.Personage",
         on_delete=models.SET_NULL,
         related_name="action_cards",
         null=True,
@@ -22,7 +21,7 @@ class ActionCardUsage(models.Model):
         verbose_name="персонаж",
     )
     game = models.ForeignKey(
-        Game,
+        "game.Game",
         on_delete=models.SET_NULL,
         related_name="action_cards",
         null=True,

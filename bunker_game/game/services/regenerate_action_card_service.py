@@ -1,5 +1,4 @@
-from bunker_game.game.models import ActionCard, Personage
-from bunker_game.game.models.action_card_usage import ActionCardUsage
+from bunker_game.game.models import ActionCard, ActionCardUsage, Personage
 
 
 class RegenerateActionCardService:

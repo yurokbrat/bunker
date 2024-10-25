@@ -12,7 +12,7 @@ from bunker_game.game.models import (
     Phobia,
     Profession,
 )
-from bunker_game.game.serializers.action_card_serializers import (
+from bunker_game.game.serializers import (
     ActionCardUsageSerializer,
 )
 from bunker_game.users.serializers import UserSerializer

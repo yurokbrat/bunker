@@ -10,11 +10,11 @@ from rest_framework.response import Response
 
 from bunker_game.game.models import Personage
 from bunker_game.game.models.game import Game
-from bunker_game.game.serializers.game_serializers import (
+from bunker_game.game.serializers import (
     GameSerializer,
     NewGameSerializer,
 )
-from bunker_game.game.services.generate_game_service import GenerateGameService
+from bunker_game.game.services import GenerateGameService
 
 
 class GameViewSet(

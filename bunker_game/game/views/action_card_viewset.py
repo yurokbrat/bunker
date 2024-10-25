@@ -6,7 +6,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from bunker_game.game.models.action_card import ActionCard
-from bunker_game.game.serializers.action_card_serializers import ActionCardSerializer
+from bunker_game.game.serializers import ActionCardSerializer
 
 
 class ActionCardViewSet(

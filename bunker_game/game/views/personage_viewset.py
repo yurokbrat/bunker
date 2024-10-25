@@ -11,13 +11,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from bunker_game.game.models import CharacteristicVisibility, Personage
-from bunker_game.game.serializers import PersonageSerializer
-from bunker_game.game.serializers.action_card_serializers import (
+from bunker_game.game.serializers import (
     ActionCardSerializer,
     ActionCardUsageSerializer,
-    UseActionCardSerializer,
-)
-from bunker_game.game.serializers.personage_serializers import (
     AdditionalInfoSerializer,
     BaggageSerializer,
     CharacteristicVisibilitySerializer,
@@ -25,19 +21,17 @@ from bunker_game.game.serializers.personage_serializers import (
     DiseaseSerializer,
     HobbySerializer,
     PersonageRegenerateSerializer,
+    PersonageSerializer,
     PhobiaSerializer,
     ProfessionSerializer,
+    UseActionCardSerializer,
 )
-from bunker_game.game.services.generate_personage_service import (
+from bunker_game.game.services import (
     GeneratePersonageService,
-)
-from bunker_game.game.services.regenerate_action_card_service import (
     RegenerateActionCardService,
-)
-from bunker_game.game.services.regenerate_characteristic_service import (
     RegenerateCharacteristicService,
+    UseActionCardService,
 )
-from bunker_game.game.services.use_action_card_service import UseActionCardService
 
 
 class PersonageViewSet(
