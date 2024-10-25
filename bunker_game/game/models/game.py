@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 
+from bunker_game.game.constants import GameDurationType
 from bunker_game.game.models import Catastrophe
 from bunker_game.game.models.bunker.model import Bunker
 from bunker_game.game.models.personage.model import Personage
@@ -35,6 +36,23 @@ class Game(models.Model):
         verbose_name="катастрофа",
         null=True,
         blank=True,
+    )
+    num_places = models.PositiveSmallIntegerField(
+        blank=True,
+        default=0,
+        verbose_name="мест в бункере",
+    )
+    game_duration_type = models.CharField(
+        blank=True,
+        default=GameDurationType.MEDIUM,
+        choices=GameDurationType.choices,
+        verbose_name="длительность игры",
+    )
+    time_in_bunker = models.CharField(
+        default="",
+        blank=True,
+        max_length=100,
+        verbose_name="продолжительность в бункере",
     )
     date_start = models.DateTimeField(
         auto_created=True,

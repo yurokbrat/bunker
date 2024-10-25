@@ -11,109 +11,124 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args: Any, **options: Any) -> None:
         action_cards = [
+            #  Another personage interactions
             {
-                "name": "Украсть болезнь у другого игрока",
+                "name": "Украсть болезнь",
                 "key": "steal_disease",
-                "description": "Вы можете украсть болезнь у любого игрока.",
+                "description": "Вы можете украсть болезнь любого игрока. "
+                "Новая болезнь игрока будет сгенерирована автоматически.",
                 "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
             },
             {
-                "name": "Раскрыть характеристику игрока",
-                "key": "reveal_any",
-                "description": "Вы можете раскрыть любую характеристику любого игрока.",
-                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
-            },
-            {
-                "name": "Украсть хобби у другого игрока",
+                "name": "Украсть хобби",
                 "key": "steal_hobby",
-                "description": "Вы можете украсть хобби у любого игрока.",
+                "description": "Вы можете украсть хобби любого игрока. "
+                "Новое хобби игрока будет сгенерировано автоматически.",
                 "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
             },
             {
-                "name": "Около бункера склад с оружием",
-                "key": "info_weapon_storage",
-                "description": "Возле вашего бункера находится склад с оружием.",
-                "target": ActionCardTargetChoice.GAME,
-            },
-            {
-                "name": "Обменяться багажом с другим игроком",
-                "key": "trade_baggage",
-                "description": "Вы можете обменяться багажом с любым игроком.",
-                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
-            },
-            {
-                "name": "Источник воды около бункера",
-                "key": "info_freshwater_lake",
-                "description": "Теперь ваш бункер находится рядом с источником "
-                "пресной воды.",
-                "target": ActionCardTargetChoice.GAME,
-            },
-            {
-                "name": "+1 слот в бункере",
-                "key": "increase_bunker_place",
-                "description": "Увеличьте количество мест в бункере на 1.",
-                "target": ActionCardTargetChoice.GAME,
-            },
-            {
-                "name": "-1 слот в бункере",
-                "key": "decrease_bunker_place",
-                "description": "Уменьшите количество мест в бункере на 1.",
-                "target": ActionCardTargetChoice.GAME,
-            },
-            {
-                "name": "Защита от выбывания",
-                "key": "immunity_one_turn",
-                "description": "Получите защиту от выбывания на 1 ход.",
-                "target": ActionCardTargetChoice.GAME,
-            },
-            {
-                "name": "Украсть багаж у другого игрока",
+                "name": "Украсть багаж",
                 "key": "steal_baggage",
-                "description": "Украдите багаж у любого игрока.",
+                "description": "Украдите багаж любого игрока. "
+                "Новый багаж игрока будет сгенерирован автоматически.",
                 "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
             },
             {
-                "name": "Аннулировать голоса за себя",
-                "key": "nullify_votes",
-                "description": "Аннулируйте все голоса за себя.",
-                "target": ActionCardTargetChoice.MYSELF,
+                "name": "Украсть профессию",
+                "key": "steal_profession",
+                "description": "Вы можете украсть профессию другого игрока. "
+                "Новая профессия игрока будет сгенерирована автоматически.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
             },
             {
-                "name": "Изменить профессию",
-                "key": "change_profession",
-                "description": "Вы можете изменить свою профессию на любую.",
-                "target": ActionCardTargetChoice.MYSELF,
+                "name": "Украсть возраст",
+                "key": "steal_age",
+                "description": "Вы можете украсть возраст другого игрока. "
+                "Новый возраст игрока будет сгенерирован автоматически.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
             },
             {
-                "name": "Вылечить игрока от болезни",
-                "key": "heal_disease",
+                "name": "Украсть пол",
+                "key": "steal_age",
+                "description": "Вы можете украсть пол другого игрока. "
+                "Новый пол игрока будет сгенерирован автоматически.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Обменяться болезнью",
+                "key": "swap_disease",
+                "description": "Вы можете обменяться болезнью с любым игроком.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Обменяться хобби",
+                "key": "swap_hobby",
+                "description": "Вы можете обменяться хобби с любым игроком.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Обменяться багажом",
+                "key": "swap_baggage",
+                "description": "Обменяйте багаж с другим игроком.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Обменяться профессией",
+                "key": "swap_profession",
+                "description": "Вы можете обменять профессию с другим игроком.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Обменяться возрастом",
+                "key": "swap_age",
+                "description": "Вы можете обменять возраст с другим игроком.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Обменяться полом",
+                "key": "swap_gender",
+                "description": "Вы можете обменять пол с другим игроком.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Поменяться всеми характеристиками",
+                "key": "swap_all_characteristics",
+                "description": "Поменяйтесь всеми характеристиками с другим игроком.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Раскрыть болезнь",
+                "key": "show_disease",
+                "description": "Раскройте болезнь любого игрока.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Раскрыть фобию",
+                "key": "show_phobia",
+                "description": "Раскройте фобию любого игрока.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Раскрыть тайную характеристику",
+                "key": "show_any",
+                "description": "Раскройте любую неозвученную характеристику другого "
+                "игрока.",
+                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+            },
+            {
+                "name": "Вылечить игрока",
+                "key": "fix_disease",
                 "description": "Вылечите любого игрока от болезни.",
                 "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
             },
             {
-                "name": "Вылечить свою фобию",
-                "key": "heal_phobia",
-                "description": "Вы можете вылечить свою фобию.",
-                "target": ActionCardTargetChoice.MYSELF,
-            },
-            {
-                "name": "Обмен профессиями по кругу",
-                "key": "swap_professions_all",
-                "description": "Все игроки меняются профессиями по часовой стрелке.",
-                "target": ActionCardTargetChoice.ALL,
-            },
-            {
-                "name": "Поменять ориентацию",
-                "key": "change_orientation",
-                "description": "Вы можете изменить свою ориентацию.",
-                "target": ActionCardTargetChoice.MYSELF,
-            },
-            {
-                "name": "Раскрыть болезнь игрока",
-                "key": "reveal_disease",
-                "description": "Раскройте состояние болезни любого игрока.",
+                "name": "Уменьшить стадию фобии",
+                "key": "fix_phobia",
+                "description": "Вы можете изменить стадию фобии другого "
+                "игрока на начальную.",
                 "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
             },
+            #  Myself interactions
             {
                 "name": "Перегенерировать профессию",
                 "key": "regenerate_profession",
@@ -139,71 +154,112 @@ class Command(BaseCommand):
                 "target": ActionCardTargetChoice.MYSELF,
             },
             {
-                "name": "Поменяться возрастом с другим игроком",
-                "key": "swap_age",
-                "description": "Вы можете поменяться возрастом с любым игроком.",
-                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
-            },
-            {
-                "name": "Украсть профессию у другого игрока",
-                "key": "steal_profession",
-                "description": "Вы можете украсть профессию у другого игрока.",
-                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
-            },
-            {
-                "name": "Раскрыть фобию игрока",
-                "key": "reveal_phobia",
-                "description": "Раскройте фобию любого игрока.",
-                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
-            },
-            {
                 "name": "Изменить пол",
-                "key": "change_gender",
+                "key": "regenerate_gender",
                 "description": "Вы можете изменить свой пол.",
                 "target": ActionCardTargetChoice.MYSELF,
             },
             {
-                "name": "Обменяться багажом с другим игроком",
-                "key": "swap_baggage",
-                "description": "Вы можете обменяться багажом с любым игроком.",
-                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
-            },
-            {
-                "name": "Перегенерировать эпидемию вокруг бункера",
-                "key": "regenerate_epidemic",
-                "description": "Перегенерируйте эпидемию вокруг вашего бункера.",
-                "target": ActionCardTargetChoice.GAME,
-            },
-            {
-                "name": "Раскрыть тайную характеристику",
-                "key": "reveal_secret",
-                "description": "Раскройте одну не озвученную характеристику любого "
-                "игрока.",
-                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
-            },
-            {
                 "name": "Уменьшить возраст на 10 лет",
-                "key": "decrease_age",
+                "key": "fix_age_minus_10",
                 "description": "Вы можете уменьшить свой возраст на 10 лет.",
                 "target": ActionCardTargetChoice.MYSELF,
             },
             {
                 "name": "Увеличить возраст на 10 лет",
-                "key": "increase_age",
+                "key": "fix_age_plus_10",
                 "description": "Вы можете увеличить свой возраст на 10 лет.",
                 "target": ActionCardTargetChoice.MYSELF,
             },
             {
-                "name": "Перегенерировать количество мест в бункере",
-                "key": "regenerate_bunker_slots",
-                "description": "Перегенерируйте количество мест в вашем бункере.",
+                "name": "Уменьшить процент болезни на 20%",
+                "key": "fix_disease_minus_20",
+                "description": "Вы можете уменьшить процент своей болезни на 20%.",
+                "target": ActionCardTargetChoice.MYSELF,
+            },
+            #  Game interactions
+            {
+                "name": "Около бункера обнаружен склад с оружием",
+                "key": "info_weapon_storage",
+                "description": "Возле вашего бункера находится склад с оружием.",
                 "target": ActionCardTargetChoice.GAME,
             },
             {
-                "name": "Поменяться всеми характеристиками с игроком",
-                "key": "swap_all_characteristics",
-                "description": "Поменяйтесь всеми характеристиками с другим игроком.",
-                "target": ActionCardTargetChoice.ANOTHER_PERSONAGE,
+                "name": "Около бункера обнаружена больница",
+                "key": "info_hospital",
+                "description": "Возле вашего бункера находится заброшенная больница "
+                "с запасом медикаментов. Теперь вы можете вылечить одного игрока",
+                "target": ActionCardTargetChoice.GAME,
+            },
+            {
+                "name": "Недалеко обнаружен дружественный бункер",
+                "key": "info_another_friendly_bunker",
+                "description": "Возле вашего бункера находится бункер "
+                "с двумя здоровыми мужчинами возрастом от 18 до 30 лет.",
+                "target": ActionCardTargetChoice.GAME,
+            },
+            {
+                "name": "Рядом обнаружен враждебный бункер",
+                "key": "info_another_hostile_bunker",
+                "description": "Возле вашего бункера находится бункер, "
+                "который настроен агрессивно",
+                "target": ActionCardTargetChoice.GAME,
+            },
+            {
+                "name": "Источник воды появился около бункера",
+                "key": "info_freshwater_lake",
+                "description": "Теперь ваш бункер находится рядом с источником "
+                "пресной воды.",
+                "target": ActionCardTargetChoice.GAME,
+            },
+            {
+                "name": "+1 слот в бункере",
+                "key": "edit_bunker_num_places_plus_one",
+                "description": "Увеличьте количество мест в бункере на 1.",
+                "target": ActionCardTargetChoice.GAME,
+            },
+            {
+                "name": "-1 слот в бункере",
+                "key": "edit_bunker_num_places_minus_one",
+                "description": "Уменьшите количество мест в бункере на 1.",
+                "target": ActionCardTargetChoice.GAME,
+            },
+            {
+                "name": "Перегенерировать эпидемию",
+                "key": "regenerate_catastrophe",
+                "description": "Перегенерируйте эпидемию вокруг вашего бункера.",
+                "target": ActionCardTargetChoice.GAME,
+            },
+            {
+                "name": "Перегенерировать бункер",
+                "key": "regenerate_bunker",
+                "description": "Перегенерируйте бункер.",
+                "target": ActionCardTargetChoice.GAME,
+            },
+            #  All interactions
+            {
+                "name": "Обмен профессиями по кругу",
+                "key": "change_profession_clockwise",
+                "description": "Все игроки меняются профессиями по часовой стрелке.",
+                "target": ActionCardTargetChoice.ALL,
+            },
+            {
+                "name": "Обмен фобиями по кругу",
+                "key": "change_phobia_clockwise",
+                "description": "Все игроки меняются фобиями по часовой стрелке.",
+                "target": ActionCardTargetChoice.ALL,
+            },
+            {
+                "name": "Увеличить возраст всех игроков на 10",
+                "key": "change_age_plus_10",
+                "description": "Возраст всех игроков увеличивается на 10.",
+                "target": ActionCardTargetChoice.ALL,
+            },
+            {
+                "name": "Уменьшить возраст всех игроков на 10",
+                "key": "change_age_minus_10",
+                "description": "Возраст всех игроков уменьшается на 10.",
+                "target": ActionCardTargetChoice.ALL,
             },
         ]
 

@@ -10,7 +10,8 @@ from bunker_game.game.constants import (
     PhobiaStageChoice,
     StatusBaggageChoice,
 )
-from bunker_game.game.models import AdditionalInfo, Character
+from bunker_game.game.models import ActionCard, AdditionalInfo, Character, Personage
+from bunker_game.game.models.action_card_usage import ActionCardUsage
 from bunker_game.utils.get_random import random
 
 
@@ -77,3 +78,14 @@ def create_random_characteristic(
 
     random_characteristic.save()
     return random_characteristic
+
+
+def generate_random_action_cards(personage: Personage, count_cards: int = 3) -> None:
+    random_cards = ActionCard.objects.order_by("?")[:count_cards]
+
+    for card in random_cards:
+        ActionCardUsage.objects.create(
+            card=card,
+            personage=personage,
+            game=personage.game,
+        )

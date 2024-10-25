@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from bunker_game.game.constants import TypeCharacteristic
 from bunker_game.game.models.action_card import ActionCard
 from bunker_game.game.models.action_card_usage import ActionCardUsage
 
@@ -11,10 +12,25 @@ class ActionCardSerializer(serializers.ModelSerializer):
         read_only_fields = ("name", "key", "description", "target")
 
 
-class UseActionCardSerializer(serializers.ModelSerializer):
-    card_key = serializers.SlugField()
-    personage_id = serializers.IntegerField()
+class ActionCardUsageSerializer(serializers.ModelSerializer):
+    card = ActionCardSerializer()
 
     class Meta:
         model = ActionCardUsage
-        fields = ("card_key", "personage_id")
+        fields = ("uuid", "card", "is_used")
+
+
+class UseActionCardSerializer(serializers.Serializer):
+    key = serializers.CharField(label="Уникальный ключ карты действия")
+    target_uuid = serializers.UUIDField(
+        label="UUID цели",
+        allow_null=True,
+        required=False,
+    )
+    showing_characteristic_type = serializers.ChoiceField(
+        TypeCharacteristic.choices,
+        allow_null=True,
+        required=False,
+        label="Характеристика, которую нужно открыть",
+        help_text="Только, если карта с ключем 'show_any'",
+    )

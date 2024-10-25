@@ -12,6 +12,9 @@ from bunker_game.game.models import (
     Phobia,
     Profession,
 )
+from bunker_game.game.serializers.action_card_serializers import (
+    ActionCardUsageSerializer,
+)
 from bunker_game.users.serializers import UserSerializer
 
 
@@ -66,6 +69,7 @@ class PersonageSerializer(serializers.ModelSerializer):
     character = CharacterSerializer()
     additional_info = AdditionalInfoSerializer()
     baggage = BaggageSerializer()
+    action_cards = ActionCardUsageSerializer(read_only=True, many=True)
 
     class Meta:
         model = Personage
@@ -82,6 +86,7 @@ class PersonageSerializer(serializers.ModelSerializer):
             "character",
             "additional_info",
             "baggage",
+            "action_cards",
         )
 
 
@@ -90,6 +95,8 @@ class PersonageRegenerateSerializer(serializers.Serializer):
 
 
 class CharacteristicVisibilitySerializer(serializers.ModelSerializer):
+    characteristic_type = serializers.ChoiceField(choices=TypeCharacteristic.choices)
+
     class Meta:
         model = CharacteristicVisibility
         fields = ("uuid", "characteristic_type", "is_hidden")

@@ -1,13 +1,19 @@
+from typing import Any
+
 from django.db.models import Model
+from rest_framework.exceptions import ValidationError
 
 from bunker_game.game.models import Personage
-from bunker_game.game.services.create_random_characteristic import (
+from bunker_game.game.services.create_random_characteristics import (
+    generate_random_action_cards,
     get_random_characteristic,
 )
 
 
 class RegenerateCharacteristicService:
     def __call__(self, personage: Personage, characteristic: str) -> int | Model | list:
+        if characteristic == "action_cards":
+            generate_random_action_cards(personage, 1)
         old_value = getattr(personage, characteristic)
         new_value = self._get_new_value(characteristic)
         while old_value == new_value:
@@ -16,6 +22,10 @@ class RegenerateCharacteristicService:
         personage.save()
         return new_value
 
-    def _get_new_value(self, characteristic: str) -> int | Model | list:
+    @staticmethod
+    def _get_new_value(characteristic: str) -> Any:
         characteristic_map = get_random_characteristic()
-        return characteristic_map[characteristic]
+        if characteristic_map.get(characteristic):
+            return characteristic_map[characteristic]
+        msg = "Указанная характеристика не найдена"
+        raise ValidationError(msg)

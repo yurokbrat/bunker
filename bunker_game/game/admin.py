@@ -18,6 +18,7 @@ from bunker_game.game.models import (
     Phobia,
     Profession,
 )
+from bunker_game.game.models.action_card_usage import ActionCardUsage
 
 
 @admin.register(Catastrophe)
@@ -96,6 +97,10 @@ class PersonageAdmin(ModelAdmin): ...
 
 @admin.register(ActionCard)
 class ActionCardAdmin(ModelAdmin): ...
+
+
+@admin.register(ActionCardUsage)
+class ActionCardUsageAdmin(ModelAdmin): ...
 
 
 @admin.register(Game)

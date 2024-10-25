@@ -177,9 +177,9 @@ class Command(BaseCommand):
             )
             image_path = base_file_path / info.pop("file_name")
             with (settings.MEDIA_ROOT / image_path).open("rb") as image_file:
-                Bunker.objects.filter(is_generated=False).get_or_create(
+                info["image"] = File(image_file)  # type: ignore[assignment]
+                Bunker.objects.filter(is_generated=False).update_or_create(
                     name=bunker_name,
-                    description=info["description"],
-                    image=File(image_file),
+                    defaults=info,
                 )
         self.stdout.write(self.style.SUCCESS("... Бункеры созданы ..."))

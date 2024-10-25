@@ -13,7 +13,7 @@ class OrientationChoice(models.TextChoices):
 
 
 class PhobiaStageChoice(models.TextChoices):
-    NONE = "none", "Отсутствует"
+    INITIAL = "initial", "Начальная"
     MILD = "mild", "Легкая"
     MODERATE = "moderate", "Средняя"
     SEVERE = "severe", "Серьезная"
@@ -51,3 +51,14 @@ class ActionCardTargetChoice(models.TextChoices):
     MYSELF = "myself", "На себя"
     ANOTHER_PERSONAGE = "another_personage", "Другой персонаж"
     GAME = "game", "Игра"
+
+
+class TypeGameCharacteristic(models.TextChoices):
+    BUNKER = "bunker", "Бункер"
+    CATASTROPHE = "catastrophe", "Катастрофа"
+
+
+class GameDurationType(models.TextChoices):
+    SHORT = "short", "Короткая"
+    MEDIUM = "medium", "Средняя"
+    LONG = "long", " Длинная"
