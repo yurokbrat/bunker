@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.db.models import Model, QuerySet
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
@@ -9,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from bunker_game.constants import DEFAULT_CHARACTERISTICS
+from bunker_game.game.constants import DEFAULT_CHARACTERISTICS
 from bunker_game.game.models import CharacteristicVisibility, Personage
 from bunker_game.game.serializers import (
     ActionCardUsageSerializer,
@@ -40,6 +41,8 @@ class PersonageViewSet(
     serializer_class = PersonageSerializer
     lookup_url_kwarg = "personage_uuid"
     lookup_field = "uuid"
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ("game__uuid", "user__uuid")
 
     def get_queryset(self) -> QuerySet[Personage]:
         return Personage.objects.all()

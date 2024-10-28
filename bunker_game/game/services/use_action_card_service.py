@@ -5,7 +5,7 @@ from uuid import UUID
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
-from bunker_game.constants import (
+from bunker_game.game.constants import (
     ALL_INTERACTIONS_ACTIONS,
     ANOTHER_PERSONAGE_INTERACTIONS_ACTIONS,
     DEFAULT_CHARACTERISTICS,

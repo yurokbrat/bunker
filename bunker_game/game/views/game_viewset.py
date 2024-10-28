@@ -97,7 +97,6 @@ class GameViewSet(
         game = self.get_object()
         personage = get_object_or_404(
             Personage,
-            user=request.user,
             game_id=game.id,
         )
         personage.delete()
