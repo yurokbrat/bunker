@@ -25,4 +25,5 @@ class GenerateGameService:
             "is_active": True,
         }
         Game.objects.filter(id=game.id).update(**game_data)
+        game.refresh_from_db()
         return game

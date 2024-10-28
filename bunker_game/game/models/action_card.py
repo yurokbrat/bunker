@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.constants import ActionCardTargetChoice
+from bunker_game.game.enums import ActionCardTargetChoice
 
 
 class ActionCard(models.Model):

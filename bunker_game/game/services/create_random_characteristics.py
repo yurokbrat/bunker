@@ -3,7 +3,7 @@ from typing import Any
 from django.apps import apps
 from django.db.models import Model
 
-from bunker_game.game.constants import (
+from bunker_game.game.enums import (
     ExperienceChoice,
     GenderChoice,
     OrientationChoice,

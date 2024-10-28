@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from bunker_game.game.constants import TypeCharacteristic
+from bunker_game.game.enums import TypeCharacteristic
 from bunker_game.game.models import (
     AdditionalInfo,
     Baggage,
@@ -12,10 +12,10 @@ from bunker_game.game.models import (
     Phobia,
     Profession,
 )
-from bunker_game.game.serializers import (
+from bunker_game.game.serializers.action_card_serializers import (
     ActionCardUsageSerializer,
 )
-from bunker_game.users.serializers import UserSerializer
+from bunker_game.users.serializers import UserShortSerializer
 
 
 class DiseaseSerializer(serializers.ModelSerializer):
@@ -60,8 +60,18 @@ class BaggageSerializer(serializers.ModelSerializer):
         fields = ("uuid", "name", "status")
 
 
-class PersonageSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+class PersonageShortSerializer(serializers.ModelSerializer):
+    user = UserShortSerializer(read_only=True)
+
+    class Meta:
+        model = Personage
+        fields: tuple[str, ...] = (
+            "uuid",
+            "user",
+        )
+
+
+class PersonageSerializer(PersonageShortSerializer):
     disease = DiseaseSerializer()
     profession = ProfessionSerializer()
     phobia = PhobiaSerializer()
@@ -71,11 +81,9 @@ class PersonageSerializer(serializers.ModelSerializer):
     baggage = BaggageSerializer()
     action_cards = ActionCardUsageSerializer(read_only=True, many=True)
 
-    class Meta:
-        model = Personage
+    class Meta(PersonageShortSerializer.Meta):
         fields = (
-            "uuid",
-            "user",
+            *PersonageShortSerializer.Meta.fields,
             "age",
             "gender",
             "orientation",
@@ -100,3 +108,10 @@ class CharacteristicVisibilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = CharacteristicVisibility
         fields = ("uuid", "characteristic_type", "is_hidden")
+
+
+class PersonageActionCardSerializer(ActionCardUsageSerializer):
+    personage = PersonageShortSerializer(read_only=True)
+
+    class Meta(ActionCardUsageSerializer.Meta):
+        fields = (*ActionCardUsageSerializer.Meta.fields, "personage")

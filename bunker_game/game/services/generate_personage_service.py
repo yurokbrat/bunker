@@ -1,6 +1,6 @@
 import logging
 
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 
 from bunker_game.game.models import (
     Personage,
@@ -22,7 +22,8 @@ class GeneratePersonageService:
             success = False
             while not success:
                 try:
-                    generate_random_action_cards(personage)
+                    with transaction.atomic():
+                        generate_random_action_cards(personage)
                     success = True
                 except IntegrityError:
                     logging.warning(

@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.constants import TypeCharacteristic
+from bunker_game.game.enums import TypeCharacteristic
 from bunker_game.game.models.personage.model import Personage
 
 

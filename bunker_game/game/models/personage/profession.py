@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.constants import ExperienceChoice
+from bunker_game.game.enums import ExperienceChoice
 
 
 class Profession(models.Model):

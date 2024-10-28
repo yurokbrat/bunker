@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.constants import GenderChoice, OrientationChoice
+from bunker_game.game.enums import GenderChoice, OrientationChoice
 from bunker_game.game.models.personage.additional_info import AdditionalInfo
 from bunker_game.game.models.personage.baggage import Baggage
 from bunker_game.game.models.personage.character import Character

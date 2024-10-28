@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.constants import GameDurationType
+from bunker_game.game.enums import GameDurationType
 from bunker_game.game.models import Catastrophe
 from bunker_game.game.models.bunker.model import Bunker
 from bunker_game.game.models.personage.model import Personage

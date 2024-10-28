@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.constants import PhobiaStageChoice
+from bunker_game.game.enums import PhobiaStageChoice
 
 
 class Phobia(models.Model):

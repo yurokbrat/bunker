@@ -6,9 +6,6 @@ from bunker_game.game.services.generate_game_service import GenerateGameService
 from bunker_game.game.services.generate_personage_service import (
     GeneratePersonageService,
 )
-from bunker_game.game.services.regenerate_action_card_service import (
-    RegenerateActionCardService,
-)
 from bunker_game.game.services.regenerate_characteristic_service import (
     RegenerateCharacteristicService,
 )
@@ -16,7 +13,6 @@ from bunker_game.game.services.use_action_card_service import UseActionCardServi
 
 __all__ = (
     "GeneratePersonageService",
-    "RegenerateActionCardService",
     "RegenerateCharacteristicService",
     "UseActionCardService",
     "GenerateGameService",

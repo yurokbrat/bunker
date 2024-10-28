@@ -1,12 +1,18 @@
 from collections.abc import Collection
+from typing import Any
 from uuid import UUID
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
-from bunker_game.game.constants import ActionCardTargetChoice, PhobiaStageChoice
+from bunker_game.constants import (
+    ALL_INTERACTIONS_ACTIONS,
+    ANOTHER_PERSONAGE_INTERACTIONS_ACTIONS,
+    DEFAULT_CHARACTERISTICS,
+    GAME_INTERACTIONS_ACTIONS,
+    MYSELF_INTERACTIONS_ACTIONS,
+)
+from bunker_game.game.enums import ActionCardTargetChoice, PhobiaStageChoice
 from bunker_game.game.models import (
     CharacteristicVisibility,
     Game,
@@ -20,28 +26,10 @@ from bunker_game.game.services.create_random_game_characteristics import (
 from bunker_game.game.services.regenerate_characteristic_service import (
     RegenerateCharacteristicService,
 )
-
-ANOTHER_PERSONAGE_INTERACTIONS_ACTIONS = frozenset(["steal", "swap", "show", "fix"])
-MYSELF_INTERACTIONS_ACTIONS = frozenset(["regenerate", "fix"])
-GAME_INTERACTIONS_ACTIONS = frozenset(["info", "edit", "regenerate"])
-ALL_INTERACTIONS_ACTIONS = frozenset(["change"])
-DEFAULT_CHARACTERISTICS = frozenset(
-    [
-        "age",
-        "gender",
-        "orientation",
-        "disease",
-        "profession",
-        "phobia",
-        "hobby",
-        "character",
-        "additional_info",
-        "baggage",
-    ],
-)
+from bunker_game.utils.websocket_mixin import WebSocketMixin
 
 
-class UseActionCardService:
+class UseActionCardService(WebSocketMixin):
     def __call__(
         self,
         card_key: str,
@@ -251,22 +239,19 @@ class UseActionCardService:
     def show_characteristic(
         self,
         personage: Personage,
-        game_uuid: UUID,
+        game_uuid: UUID | Any,
         type_characteristic: str,
     ) -> None:
+        value_characteristic = getattr(personage, type_characteristic)
         visibility = CharacteristicVisibility.objects.get(
             personage=personage,
             characteristic_type=type_characteristic,
         )
         visibility.is_hidden = False
         visibility.save()
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            f"game_{game_uuid}",
-            {
-                "type": "update_characteristics",
-                "personage_id": personage.id,
-                "characteristic_type": type_characteristic,
-                "is_hidden": False,
-            },
+        self.send_characteristic(
+            game_uuid,
+            personage.id,
+            type_characteristic,
+            value_characteristic,
         )

@@ -1,18 +1,17 @@
 from typing import Any
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.db.models import Model, QuerySet
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from bunker_game.constants import DEFAULT_CHARACTERISTICS
 from bunker_game.game.models import CharacteristicVisibility, Personage
 from bunker_game.game.serializers import (
-    ActionCardSerializer,
     ActionCardUsageSerializer,
     AdditionalInfoSerializer,
     BaggageSerializer,
@@ -28,15 +27,16 @@ from bunker_game.game.serializers import (
 )
 from bunker_game.game.services import (
     GeneratePersonageService,
-    RegenerateActionCardService,
     RegenerateCharacteristicService,
     UseActionCardService,
 )
+from bunker_game.utils.websocket_mixin import WebSocketMixin
 
 
 class PersonageViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
+    WebSocketMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Personage.objects.all()
@@ -45,9 +45,7 @@ class PersonageViewSet(
     lookup_field = "uuid"
 
     def get_queryset(self) -> QuerySet[Personage]:
-        if game_uuid := self.kwargs.get("game_uuid"):
-            return Personage.objects.filter(games__uuid=game_uuid)
-        return Personage.objects.none()
+        return Personage.objects.all()
 
     @extend_schema(request=None, responses=PersonageSerializer())
     @action(
@@ -105,31 +103,6 @@ class PersonageViewSet(
         detail=True,
         methods=("PATCH",),
         permission_classes=(IsAuthenticated,),
-        url_path="regenerate-action-card",
-        serializer_class=None,
-    )
-    def regenerate_action_card(
-        self,
-        request: Request,
-        *args: Any,
-        **kwargs: Any,
-    ) -> Response:
-        personage = self.get_object()
-        new_action_card = RegenerateActionCardService()(personage)
-        action_card_serializer = ActionCardSerializer(
-            instance=new_action_card,
-            context={"request": request},
-        )
-
-        return Response(
-            {"New action card": action_card_serializer.data},
-            status=status.HTTP_200_OK,
-        )
-
-    @action(
-        detail=True,
-        methods=("PATCH",),
-        permission_classes=(IsAuthenticated,),
         serializer_class=CharacteristicVisibilitySerializer,
     )
     def toggle_visibility(
@@ -138,9 +111,11 @@ class PersonageViewSet(
         *args: Any,
         **kwargs: Any,
     ) -> Response:
-        game_uuid = self.kwargs.get("game_uuid")
         personage = self.get_object()
         characteristic_type = request.data.get("characteristic_type")
+        if characteristic_type not in DEFAULT_CHARACTERISTICS:
+            error_message = "Invalid characteristic"
+            raise ValidationError(error_message)
         is_hidden = request.data.get("is_hidden")
         visibility, _ = CharacteristicVisibility.objects.get_or_create(
             personage=personage,
@@ -148,15 +123,12 @@ class PersonageViewSet(
         )
         visibility.is_hidden = is_hidden  # type: ignore[assignment]
         visibility.save()
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            f"game_{game_uuid}",
-            {
-                "type": "update_characteristics",
-                "personage_id": personage.id,
-                "characteristic_type": characteristic_type,
-                "is_hidden": is_hidden,
-            },
+        value_characteristic = getattr(personage, characteristic_type)
+        self.send_characteristic(
+            personage.game.uuid,
+            personage.id,
+            characteristic_type,
+            value_characteristic,
         )
 
         return Response(
@@ -164,6 +136,10 @@ class PersonageViewSet(
             status=status.HTTP_200_OK,
         )
 
+    @extend_schema(
+        request=UseActionCardSerializer(),
+        responses=ActionCardUsageSerializer(),
+    )
     @action(
         detail=True,
         methods=("POST",),
@@ -188,4 +164,5 @@ class PersonageViewSet(
             instance=action_card,
             context={"request": request},
         )
+        self.send_action_card(personage.game.uuid, action_card, request)
         return Response(action_serializer.data, status=status.HTTP_200_OK)

@@ -3,7 +3,7 @@ from typing import Any
 from django.core.management import BaseCommand
 from django.db import transaction
 
-from bunker_game.game.constants import ActionCardTargetChoice
+from bunker_game.game.enums import ActionCardTargetChoice
 from bunker_game.game.models import ActionCard
 
 

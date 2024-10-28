@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from bunker_game.game.constants import TypeCharacteristic
+from bunker_game.game.enums import TypeCharacteristic
 from bunker_game.game.models import ActionCard, ActionCardUsage
 
 
@@ -16,7 +16,7 @@ class ActionCardUsageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActionCardUsage
-        fields = ("uuid", "card", "is_used")
+        fields: tuple[str, ...] = ("uuid", "card", "is_used")
 
 
 class UseActionCardSerializer(serializers.Serializer):

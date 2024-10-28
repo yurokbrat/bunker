@@ -33,5 +33,5 @@ class UserViewSet(
 
     @action(detail=False)
     def me(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        serializer = UserSerializer(request.user, context={"request": request})  # type: ignore[arg-type]
+        serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)

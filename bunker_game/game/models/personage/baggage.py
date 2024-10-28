@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.constants import StatusBaggageChoice
+from bunker_game.game.enums import StatusBaggageChoice
 
 
 class Baggage(models.Model):
