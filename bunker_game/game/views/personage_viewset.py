@@ -120,7 +120,7 @@ class PersonageViewSet(
                 characteristic_value,
                 request,
             ).data
-        self.send_characteristic(
+        self.web_socket_send_characteristic(
             personage.game.uuid,
             personage.id,
             characteristic_type,
@@ -164,5 +164,5 @@ class PersonageViewSet(
             instance=action_card,
             context={"request": request},
         )
-        self.send_action_card(personage.game.uuid, action_card, request)
+        self.web_socket_send_action_card(personage.game.uuid, action_card, request)
         return Response(action_serializer.data, status=status.HTTP_200_OK)

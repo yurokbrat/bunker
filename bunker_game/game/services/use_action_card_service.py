@@ -249,7 +249,7 @@ class UseActionCardService(WebSocketMixin):
         )
         visibility.is_hidden = False
         visibility.save()
-        self.send_characteristic(
+        self.web_socket_send_characteristic(
             game_uuid,
             personage.id,
             type_characteristic,

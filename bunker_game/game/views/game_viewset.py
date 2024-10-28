@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -63,7 +64,7 @@ class GameViewSet(
             return Response(data="Игра уже начата", status=status.HTTP_400_BAD_REQUEST)
         GenerateGameService()(game)
         serializer = GameSerializer(instance=game, context={"request": request})
-        self.start_game(game.uuid, serializer.data)
+        self.web_socket_start_game(game.uuid, serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(request=None, responses=GameSerializer())
@@ -82,9 +83,26 @@ class GameViewSet(
         if created:
             game.personages.add(personage)
             game.save()
-            self.join_game(game.uuid, personage, request)
+            self.web_socket_join_game(game.uuid, personage, request)
         serializer = GameSerializer(instance=game, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(
+        detail=True,
+        methods=("DELETE",),
+        permission_classes=(IsAuthenticated,),
+        serializer_class=None,
+    )
+    def disconnect(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        game = self.get_object()
+        personage = get_object_or_404(
+            Personage,
+            user=request.user,
+            game_id=game.id,
+        )
+        personage.delete()
+        self.web_socket_exit_game(game.uuid, personage, request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def perform_destroy(self, instance: Game) -> None:
         # TODO: Сделать заморозку игры на сутки

@@ -14,7 +14,7 @@ from bunker_game.game.serializers.personage_serializers import (
 
 
 class WebSocketMixin:
-    def send_characteristic(
+    def web_socket_send_characteristic(
         self,
         game_uuid: UUID | Any,
         personage_id: int,
@@ -33,7 +33,7 @@ class WebSocketMixin:
             },
         )
 
-    def join_game(
+    def web_socket_join_game(
         self,
         game_uuid: str,
         personage: Personage,
@@ -52,7 +52,26 @@ class WebSocketMixin:
             },
         )
 
-    def start_game(self, game_uuid: UUID, game_data: dict[str, Any]) -> None:
+    def web_socket_exit_game(
+        self,
+        game_uuid: str,
+        personage: Personage,
+        request: Request,
+    ) -> None:
+        personage_serializer = PersonageShortSerializer(
+            personage,
+            context={"request": request},
+        )
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"game_{game_uuid}",
+            {
+                "type": "exit_game",
+                "personage_data": personage_serializer.data,
+            },
+        )
+
+    def web_socket_start_game(self, game_uuid: UUID, game_data: dict[str, Any]) -> None:
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             f"game_{game_uuid}",
@@ -62,7 +81,7 @@ class WebSocketMixin:
             },
         )
 
-    def send_action_card(
+    def web_socket_send_action_card(
         self,
         game_uuid: str,
         action_card: Model,

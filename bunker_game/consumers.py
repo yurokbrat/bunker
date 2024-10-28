@@ -63,6 +63,21 @@ class GameConsumer(AsyncWebsocketConsumer):
             ),
         )
 
+    async def exit_game(self, event: dict) -> None:
+        action_type = event.get("type")
+        personage_data = event["personage_data"]
+
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": action_type,
+                    "personage_data": personage_data,
+                },
+                ensure_ascii=False,
+            ),
+        )
+        await self.channel_layer.group_discard(self.game_name, self.channel_name)
+
     async def start_game(self, event: dict) -> None:
         action_type = event.get("type")
         game_data = event.get("game_data")
@@ -98,6 +113,3 @@ class GameConsumer(AsyncWebsocketConsumer):
                 ensure_ascii=False,
             ),
         )
-
-    async def disconnect(self, close_code: int) -> None:
-        await self.channel_layer.group_discard(self.game_name, self.channel_name)
