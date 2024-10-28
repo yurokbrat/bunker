@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from bunker_game.game.enums import TypeCharacteristic
+from bunker_game.game.enums import TypeCharacteristicChoices
 from bunker_game.game.models import (
     AdditionalInfo,
     Baggage,
@@ -99,11 +99,16 @@ class PersonageSerializer(PersonageShortSerializer):
 
 
 class PersonageRegenerateSerializer(serializers.Serializer):
-    characteristic_type = serializers.ChoiceField(choices=TypeCharacteristic.choices)
+    characteristic_type = serializers.ChoiceField(
+        choices=TypeCharacteristicChoices.choices,
+    )
 
 
 class CharacteristicVisibilitySerializer(serializers.ModelSerializer):
-    characteristic_type = serializers.ChoiceField(choices=TypeCharacteristic.choices)
+    characteristic_type = serializers.ChoiceField(
+        choices=TypeCharacteristicChoices.choices,
+    )
+    is_hidden = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = CharacteristicVisibility

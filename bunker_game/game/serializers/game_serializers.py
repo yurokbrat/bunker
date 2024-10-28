@@ -3,11 +3,11 @@ from rest_framework import serializers
 from bunker_game.game.enums import GameDurationType
 from bunker_game.game.models.game import Game
 from bunker_game.game.serializers import (
+    ActionCardUsageSerializer,
     BunkerSerializer,
     CatastropheSerializer,
 )
 from bunker_game.game.serializers.personage_serializers import (
-    PersonageActionCardSerializer,
     PersonageSerializer,
 )
 from bunker_game.users.serializers import UserShortSerializer
@@ -18,7 +18,7 @@ class GameSerializer(serializers.ModelSerializer):
     personages = PersonageSerializer(many=True, read_only=True, allow_null=True)
     bunker = BunkerSerializer()
     catastrophe = CatastropheSerializer()
-    action_cards = PersonageActionCardSerializer(many=True)
+    action_cards = ActionCardUsageSerializer(many=True)
 
     class Meta:
         model = Game

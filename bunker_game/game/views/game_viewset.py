@@ -4,10 +4,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
 
 from bunker_game.game.models import Personage
 from bunker_game.game.models.game import Game
@@ -22,6 +22,7 @@ from bunker_game.utils.websocket_mixin import WebSocketMixin
 class GameViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
     WebSocketMixin,
     viewsets.GenericViewSet,
 ):
@@ -29,7 +30,8 @@ class GameViewSet(
     serializer_class = GameSerializer
     lookup_url_kwarg = "game_uuid"
     lookup_field = "uuid"
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    search_fields = ("personages__uuid",)
     filterset_fields = ("is_active", "date_start")
 
     @extend_schema(responses=GameSerializer())
@@ -64,11 +66,12 @@ class GameViewSet(
         self.start_game(game.uuid, serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(request=None, responses=GameSerializer())
     @action(
         detail=True,
         methods=("POST",),
         permission_classes=(IsAuthenticated,),
-        serializer_class=Serializer,
+        serializer_class=GameSerializer,
     )
     def connect(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
@@ -83,14 +86,6 @@ class GameViewSet(
         serializer = GameSerializer(instance=game, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(
-        detail=True,
-        methods=("DELETE",),
-        permission_classes=(IsAuthenticated,),
-        serializer_class=None,
-    )
-    def stop(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        game = self.get_object()
+    def perform_destroy(self, instance: Game) -> None:
         # TODO: Сделать заморозку игры на сутки
-        game.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        super().perform_destroy(instance)

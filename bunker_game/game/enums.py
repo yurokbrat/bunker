@@ -33,7 +33,7 @@ class ExperienceChoice(models.TextChoices):
     MASTER = "master", "Мастер"
 
 
-class TypeCharacteristic(models.TextChoices):
+class TypeCharacteristicChoices(models.TextChoices):
     AGE = "age", "Возраст"
     GENDER = "gender", "Пол"
     ORIENTATION = "orientation", "Ориентация"

@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from bunker_game.game.enums import TypeCharacteristic
+from bunker_game.game.enums import TypeCharacteristicChoices
 from bunker_game.game.models.personage.model import Personage
 
 
@@ -16,7 +16,7 @@ class CharacteristicVisibility(models.Model):
     )
     characteristic_type = models.CharField(
         max_length=30,
-        choices=TypeCharacteristic.choices,
+        choices=TypeCharacteristicChoices.choices,
         verbose_name="тип характеристики",
     )
     is_hidden = models.BooleanField(default=True, verbose_name="скрыта")

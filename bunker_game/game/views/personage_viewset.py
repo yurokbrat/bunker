@@ -13,22 +13,18 @@ from bunker_game.constants import DEFAULT_CHARACTERISTICS
 from bunker_game.game.models import CharacteristicVisibility, Personage
 from bunker_game.game.serializers import (
     ActionCardUsageSerializer,
-    AdditionalInfoSerializer,
-    BaggageSerializer,
     CharacteristicVisibilitySerializer,
-    CharacterSerializer,
-    DiseaseSerializer,
-    HobbySerializer,
     PersonageRegenerateSerializer,
     PersonageSerializer,
-    PhobiaSerializer,
-    ProfessionSerializer,
     UseActionCardSerializer,
 )
 from bunker_game.game.services import (
     GeneratePersonageService,
     RegenerateCharacteristicService,
     UseActionCardService,
+)
+from bunker_game.utils.format_characteristic_value_mixin import (
+    FormatCharacteristicValueMixin,
 )
 from bunker_game.utils.websocket_mixin import WebSocketMixin
 
@@ -37,6 +33,7 @@ class PersonageViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     WebSocketMixin,
+    FormatCharacteristicValueMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Personage.objects.all()
@@ -79,19 +76,10 @@ class PersonageViewSet(
             characteristic,
         )
         if isinstance(new_characteristic, Model):
-            serializers_map = {
-                "disease": DiseaseSerializer,
-                "profession": ProfessionSerializer,
-                "phobia": PhobiaSerializer,
-                "hobby": HobbySerializer,
-                "character": CharacterSerializer,
-                "additional_info": AdditionalInfoSerializer,
-                "baggage": BaggageSerializer,
-            }
-            serializer_type = serializers_map[characteristic]
-            serializer = serializer_type(
-                instance=new_characteristic,
-                context={"request": request},
+            serializer = self.format_characteristic_value(
+                characteristic,
+                new_characteristic,
+                request,
             )
             return Response(
                 {characteristic: serializer.data},
@@ -104,35 +92,47 @@ class PersonageViewSet(
         methods=("PATCH",),
         permission_classes=(IsAuthenticated,),
         serializer_class=CharacteristicVisibilitySerializer,
+        url_path="reveal-characteristic",
     )
-    def toggle_visibility(
+    def reveal_characteristic(
         self,
         request: Request,
         *args: Any,
         **kwargs: Any,
     ) -> Response:
         personage = self.get_object()
-        characteristic_type = request.data.get("characteristic_type")
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        characteristic_type = serializer.validated_data["characteristic_type"]
         if characteristic_type not in DEFAULT_CHARACTERISTICS:
             error_message = "Invalid characteristic"
             raise ValidationError(error_message)
-        is_hidden = request.data.get("is_hidden")
         visibility, _ = CharacteristicVisibility.objects.get_or_create(
             personage=personage,
             characteristic_type=characteristic_type,
         )
-        visibility.is_hidden = is_hidden  # type: ignore[assignment]
+        visibility.is_hidden = False
         visibility.save()
-        value_characteristic = getattr(personage, characteristic_type)
+        characteristic_value = getattr(personage, characteristic_type)
+        if isinstance(characteristic_value, Model):
+            characteristic_value = self.format_characteristic_value(
+                characteristic_type,
+                characteristic_value,
+                request,
+            ).data
         self.send_characteristic(
             personage.game.uuid,
             personage.id,
             characteristic_type,
-            value_characteristic,
+            characteristic_value,
         )
 
         return Response(
-            {"characteristic_type": characteristic_type, "is_hidden": is_hidden},
+            {
+                "characteristic_type": characteristic_type,
+                "characteristic_value": characteristic_value,
+                "is_hidden": False,
+            },
             status=status.HTTP_200_OK,
         )
 

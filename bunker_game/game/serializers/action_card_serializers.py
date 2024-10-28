@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from bunker_game.game.enums import TypeCharacteristic
+from bunker_game.game.enums import TypeCharacteristicChoices
 from bunker_game.game.models import ActionCard, ActionCardUsage
 
 
@@ -26,8 +26,8 @@ class UseActionCardSerializer(serializers.Serializer):
         allow_null=True,
         required=False,
     )
-    showing_characteristic_type = serializers.ChoiceField(
-        TypeCharacteristic.choices,
+    characteristic_type = serializers.ChoiceField(
+        choices=TypeCharacteristicChoices.choices,
         allow_null=True,
         required=False,
         label="Характеристика, которую нужно открыть",
