@@ -2,8 +2,15 @@ from django.db.models import Model
 from rest_framework.request import Request
 from rest_framework.serializers import ModelSerializer
 
-from bunker_game.game.serializers import DiseaseSerializer, ProfessionSerializer, PhobiaSerializer, HobbySerializer, \
-    CharacterSerializer, AdditionalInfoSerializer, BaggageSerializer
+from bunker_game.game.serializers import (
+    AdditionalInfoSerializer,
+    BaggageSerializer,
+    CharacterSerializer,
+    DiseaseSerializer,
+    HobbySerializer,
+    PhobiaSerializer,
+    ProfessionSerializer,
+)
 
 
 def format_characteristic_value(

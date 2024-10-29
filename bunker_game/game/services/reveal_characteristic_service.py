@@ -10,7 +10,12 @@ from bunker_game.utils.format_characteristic_value import format_characteristic_
 
 
 class RevealCharacteristicService:
-    def __call__(self, characteristic_type: str, personage: Personage, request: Request) -> Any:
+    def __call__(
+        self,
+        characteristic_type: str,
+        personage: Personage,
+        request: Request,
+    ) -> Any:
         if characteristic_type not in DEFAULT_CHARACTERISTICS:
             error_message = "Invalid characteristic"
             raise ValidationError(error_message)
@@ -28,4 +33,3 @@ class RevealCharacteristicService:
                 request,
             ).data
         return characteristic_value
-

@@ -20,13 +20,11 @@ from bunker_game.game.serializers import (
 from bunker_game.game.services import (
     GeneratePersonageService,
     RegenerateCharacteristicService,
-    UseActionCardService, RevealCharacteristicService,
+    RevealCharacteristicService,
+    UseActionCardService,
 )
 from bunker_game.utils.format_characteristic_value import format_characteristic_value
-from bunker_game.utils.mixins import (
-    PermissionByActionMixin,
-    WebSocketMixin
-)
+from bunker_game.utils.mixins import PermissionByActionMixin, WebSocketMixin
 
 
 class PersonageViewSet(
@@ -106,7 +104,11 @@ class PersonageViewSet(
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         characteristic_type = serializer.validated_data["characteristic_type"]
-        characteristic_value = RevealCharacteristicService()(characteristic_type, personage, request)
+        characteristic_value = RevealCharacteristicService()(
+            characteristic_type,
+            personage,
+            request,
+        )
         self.web_socket_send_characteristic(
             personage.game.uuid,
             personage.id,

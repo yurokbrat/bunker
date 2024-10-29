@@ -19,7 +19,7 @@ from bunker_game.game.serializers import (
     NewGameSerializer,
 )
 from bunker_game.game.services import GenerateGameService
-from bunker_game.utils.mixins import WebSocketMixin, PermissionByActionMixin
+from bunker_game.utils.mixins import PermissionByActionMixin, WebSocketMixin
 
 
 class GameViewSet(
@@ -69,7 +69,6 @@ class GameViewSet(
         serializer = GameSerializer(instance=game, context={"request": request})
         self.web_socket_start_game(game.uuid, serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
     @extend_schema(request=None, responses=None)
     @action(detail=True, methods=("POST",))
