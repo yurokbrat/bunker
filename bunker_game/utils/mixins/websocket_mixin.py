@@ -71,6 +71,25 @@ class WebSocketMixin:
             },
         )
 
+    def web_socket_kick_personage(
+        self,
+        game_uuid: str,
+        personage: Personage,
+        request: Request,
+    ) -> None:
+        personage_serializer = PersonageShortSerializer(
+            personage,
+            context={"request": request},
+        )
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"game_{game_uuid}",
+            {
+                "type": "kick_personage",
+                "personage_data": personage_serializer.data,
+            },
+        )
+
     def web_socket_start_game(self, game_uuid: UUID, game_data: dict[str, Any]) -> None:
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(

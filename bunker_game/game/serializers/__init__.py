@@ -11,6 +11,7 @@ from bunker_game.game.serializers.bunker_serializers import (
 from bunker_game.game.serializers.catastrophe_serializers import CatastropheSerializer
 from bunker_game.game.serializers.game_serializers import (
     GameSerializer,
+    KickPersonageGameSerializer,
     NewGameSerializer,
 )
 from bunker_game.game.serializers.personage_serializers import (
@@ -46,4 +47,5 @@ __all__ = (
     "ProfessionSerializer",
     "GameSerializer",
     "NewGameSerializer",
+    "KickPersonageGameSerializer",
 )

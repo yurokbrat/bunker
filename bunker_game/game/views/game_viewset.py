@@ -16,6 +16,7 @@ from bunker_game.game.models.game import Game
 from bunker_game.game.permissions import IsGameCreator
 from bunker_game.game.serializers import (
     GameSerializer,
+    KickPersonageGameSerializer,
     NewGameSerializer,
 )
 from bunker_game.game.services import GenerateGameService
@@ -36,6 +37,7 @@ class GameViewSet(
         "start": IsGameCreator,
         "stop": IsGameCreator,
         "destroy": IsGameCreator,
+        "kick": IsGameCreator,
     }
     lookup_url_kwarg = "game_uuid"
     lookup_field = "uuid"
@@ -116,6 +118,22 @@ class GameViewSet(
         self.web_socket_exit_game(game.uuid, personage, request)
         personage.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @extend_schema(responses=None)
+    @action(
+        detail=True,
+        methods=("POST",),
+        serializer_class=KickPersonageGameSerializer,
+    )
+    def kick(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        game = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        personage_uuid = serializer.validated_data["personage_uuid"]
+        personage = get_object_or_404(Personage, uuid=personage_uuid)
+        personage.delete()
+        self.web_socket_kick_personage(game.uuid, personage, request)
+        return Response(status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance: Game) -> None:
         # TODO: Сделать заморозку игры на сутки

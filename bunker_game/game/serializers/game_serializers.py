@@ -43,3 +43,7 @@ class NewGameSerializer(serializers.Serializer):
         GameDurationType.choices,
         default=GameDurationType.MEDIUM,
     )
+
+
+class KickPersonageGameSerializer(serializers.Serializer):
+    personage_uuid = serializers.UUIDField(write_only=True)

@@ -78,6 +78,20 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
         await self.channel_layer.group_discard(self.game_name, self.channel_name)
 
+    async def kick_personage(self, event: dict) -> None:
+        action_type = event.get("type")
+        personage_data = event["personage_data"]
+
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": action_type,
+                    "personage_data": personage_data,
+                },
+                ensure_ascii=False,
+            ),
+        )
+
     async def start_game(self, event: dict) -> None:
         action_type = event.get("type")
         game_data = event.get("game_data")
