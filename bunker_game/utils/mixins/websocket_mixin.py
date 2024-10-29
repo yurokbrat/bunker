@@ -81,6 +81,16 @@ class WebSocketMixin:
             },
         )
 
+    def web_socket_stop_game(self, game_uuid: UUID, game_data: dict[str, Any]) -> None:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"game_{game_uuid}",
+            {
+                "type": "stop_game",
+                "game_data": game_data,
+            },
+        )
+
     def web_socket_send_action_card(
         self,
         game_uuid: str,

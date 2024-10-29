@@ -89,6 +89,17 @@ class GameConsumer(AsyncWebsocketConsumer):
             ),
         )
 
+    async def stop_game(self, event: dict) -> None:
+        action_type = event.get("type")
+        game_data = event.get("game_data")
+
+        await self.send(
+            text_data=json.dumps(
+                {"type": action_type, "game_data": game_data},
+                ensure_ascii=False,
+            ),
+        )
+
     async def regenerate_game(self, event: dict) -> None:
         action_type = event.get("type")
         new_characteristic_data = event.get("new_characteristic_data")

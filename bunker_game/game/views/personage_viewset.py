@@ -5,13 +5,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from bunker_game.game.constants import DEFAULT_CHARACTERISTICS
-from bunker_game.game.models import CharacteristicVisibility, Personage
+from bunker_game.game.models import Personage
+from bunker_game.game.permissions import IsRelatedPersonage
 from bunker_game.game.serializers import (
     ActionCardUsageSerializer,
     CharacteristicVisibilitySerializer,
@@ -22,23 +20,30 @@ from bunker_game.game.serializers import (
 from bunker_game.game.services import (
     GeneratePersonageService,
     RegenerateCharacteristicService,
-    UseActionCardService,
+    UseActionCardService, RevealCharacteristicService,
 )
-from bunker_game.utils.format_characteristic_value_mixin import (
-    FormatCharacteristicValueMixin,
+from bunker_game.utils.format_characteristic_value import format_characteristic_value
+from bunker_game.utils.mixins import (
+    PermissionByActionMixin,
+    WebSocketMixin
 )
-from bunker_game.utils.websocket_mixin import WebSocketMixin
 
 
 class PersonageViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     WebSocketMixin,
-    FormatCharacteristicValueMixin,
+    PermissionByActionMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Personage.objects.all()
     serializer_class = PersonageSerializer
+    permission_action_classes = {
+        "generate": IsRelatedPersonage,
+        "regenerate": IsRelatedPersonage,
+        "reveal_characteristic": IsRelatedPersonage,
+        "use_action_card": IsRelatedPersonage,
+    }
     lookup_url_kwarg = "personage_uuid"
     lookup_field = "uuid"
     filter_backends = (DjangoFilterBackend,)
@@ -48,11 +53,7 @@ class PersonageViewSet(
         return Personage.objects.all()
 
     @extend_schema(request=None, responses=PersonageSerializer())
-    @action(
-        detail=True,
-        methods=("POST",),
-        permission_classes=(IsAuthenticated,),
-    )
+    @action(detail=True, methods=("POST",))
     def generate(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         personage = self.get_object()
         new_personage, created = GeneratePersonageService()(personage)
@@ -66,7 +67,6 @@ class PersonageViewSet(
     @action(
         detail=True,
         methods=("PATCH",),
-        permission_classes=(IsAuthenticated,),
         serializer_class=PersonageRegenerateSerializer,
     )
     def regenerate(self, request: Request, *args: Any, **kwargs: Any) -> Response:
@@ -79,7 +79,7 @@ class PersonageViewSet(
             characteristic,
         )
         if isinstance(new_characteristic, Model):
-            serializer = self.format_characteristic_value(
+            serializer = format_characteristic_value(
                 characteristic,
                 new_characteristic,
                 request,
@@ -93,7 +93,6 @@ class PersonageViewSet(
     @action(
         detail=True,
         methods=("PATCH",),
-        permission_classes=(IsAuthenticated,),
         serializer_class=CharacteristicVisibilitySerializer,
         url_path="reveal-characteristic",
     )
@@ -107,22 +106,7 @@ class PersonageViewSet(
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         characteristic_type = serializer.validated_data["characteristic_type"]
-        if characteristic_type not in DEFAULT_CHARACTERISTICS:
-            error_message = "Invalid characteristic"
-            raise ValidationError(error_message)
-        visibility, _ = CharacteristicVisibility.objects.get_or_create(
-            personage=personage,
-            characteristic_type=characteristic_type,
-        )
-        visibility.is_hidden = False
-        visibility.save()
-        characteristic_value = getattr(personage, characteristic_type)
-        if isinstance(characteristic_value, Model):
-            characteristic_value = self.format_characteristic_value(
-                characteristic_type,
-                characteristic_value,
-                request,
-            ).data
+        characteristic_value = RevealCharacteristicService()(characteristic_type, personage, request)
         self.web_socket_send_characteristic(
             personage.game.uuid,
             personage.id,
@@ -146,7 +130,6 @@ class PersonageViewSet(
     @action(
         detail=True,
         methods=("POST",),
-        permission_classes=(IsAuthenticated,),
         serializer_class=UseActionCardSerializer,
         url_path="use-action-card",
     )

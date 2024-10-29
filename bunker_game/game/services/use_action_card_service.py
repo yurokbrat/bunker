@@ -26,7 +26,7 @@ from bunker_game.game.services.create_random_game_characteristics import (
 from bunker_game.game.services.regenerate_characteristic_service import (
     RegenerateCharacteristicService,
 )
-from bunker_game.utils.websocket_mixin import WebSocketMixin
+from bunker_game.utils.mixins.websocket_mixin import WebSocketMixin
 
 
 class UseActionCardService(WebSocketMixin):

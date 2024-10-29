@@ -9,6 +9,7 @@ from bunker_game.game.services.generate_personage_service import (
 from bunker_game.game.services.regenerate_characteristic_service import (
     RegenerateCharacteristicService,
 )
+from bunker_game.game.services.reveal_characteristic_service import RevealCharacteristicService
 from bunker_game.game.services.use_action_card_service import UseActionCardService
 
 __all__ = (
@@ -19,4 +20,5 @@ __all__ = (
     "generate_random_bunker",
     "generate_random_catastrophe",
     "RegenerateCharacteristicService",
+    "RevealCharacteristicService",
 )
