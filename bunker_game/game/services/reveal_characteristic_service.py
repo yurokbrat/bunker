@@ -1,11 +1,11 @@
 from typing import Any
 
 from django.db.models import Model
-from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
 
 from bunker_game.game.constants import DEFAULT_CHARACTERISTICS
 from bunker_game.game.models import CharacteristicVisibility, Personage
+from bunker_game.utils.exceptions import InvalidCharacteristicError
 from bunker_game.utils.format_characteristic_value import format_characteristic_value
 
 
@@ -17,8 +17,7 @@ class RevealCharacteristicService:
         request: Request,
     ) -> Any:
         if characteristic_type not in DEFAULT_CHARACTERISTICS:
-            error_message = "Invalid characteristic"
-            raise ValidationError(error_message)
+            raise InvalidCharacteristicError
         visibility, _ = CharacteristicVisibility.objects.get_or_create(
             personage=personage,
             characteristic_type=characteristic_type,

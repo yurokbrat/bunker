@@ -128,3 +128,37 @@ class WebSocketMixin:
                 "action_card_data": action_card_serializer.data,
             },
         )
+
+    def web_socket_start_voting(
+        self,
+        game_uuid: UUID,
+        voting_data: dict[str, Any],
+    ) -> None:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"game_{game_uuid}",
+            {
+                "type": "start_voting",
+                "voting_data": voting_data,
+            },
+        )
+
+    def web_socket_send_vote(self, game_uuid: UUID, vote_data: dict[str, Any]) -> None:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"game_{game_uuid}",
+            {
+                "type": "send_vote",
+                "vote_data": vote_data,
+            },
+        )
+
+    def web_socket_stop_voting(self, game_uuid: UUID, results: dict[str, Any]) -> None:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"game_{game_uuid}",
+            {
+                "type": "stop_voting",
+                "results_data": results,
+            },
+        )

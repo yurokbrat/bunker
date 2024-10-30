@@ -1,13 +1,13 @@
 from typing import Any
 
 from django.db.models import Model
-from rest_framework.exceptions import ValidationError
 
 from bunker_game.game.models import Personage
 from bunker_game.game.services.create_random_characteristics import (
     generate_random_action_cards,
     get_random_characteristic,
 )
+from bunker_game.utils.exceptions import InvalidCharacteristicError
 
 
 class RegenerateCharacteristicService:
@@ -27,5 +27,4 @@ class RegenerateCharacteristicService:
         characteristic_map = get_random_characteristic()
         if characteristic_map.get(characteristic):
             return characteristic_map[characteristic]
-        msg = "Указанная характеристика не найдена"
-        raise ValidationError(msg)
+        raise InvalidCharacteristicError

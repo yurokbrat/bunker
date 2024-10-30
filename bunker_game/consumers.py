@@ -57,7 +57,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             text_data=json.dumps(
                 {
                     "type": action_type,
-                    "personage_data": personage_data,
+                    "personage": personage_data,
                 },
                 ensure_ascii=False,
             ),
@@ -71,7 +71,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             text_data=json.dumps(
                 {
                     "type": action_type,
-                    "personage_data": personage_data,
+                    "personage": personage_data,
                 },
                 ensure_ascii=False,
             ),
@@ -86,7 +86,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             text_data=json.dumps(
                 {
                     "type": action_type,
-                    "personage_data": personage_data,
+                    "personage": personage_data,
                 },
                 ensure_ascii=False,
             ),
@@ -98,7 +98,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         await self.send(
             text_data=json.dumps(
-                {"type": action_type, "game_data": game_data},
+                {"type": action_type, "game": game_data},
                 ensure_ascii=False,
             ),
         )
@@ -109,7 +109,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         await self.send(
             text_data=json.dumps(
-                {"type": action_type, "game_data": game_data},
+                {"type": action_type, "game": game_data},
                 ensure_ascii=False,
             ),
         )
@@ -122,7 +122,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             text_data=json.dumps(
                 {
                     "type": action_type,
-                    "new_characteristic_data": new_characteristic_data,
+                    "new_characteristic": new_characteristic_data,
                 },
                 ensure_ascii=False,
             ),
@@ -135,6 +135,39 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.send(
             text_data=json.dumps(
                 {"type": action_type, "action_card": action_card_data},
+                ensure_ascii=False,
+            ),
+        )
+
+    async def start_voting(self, event: dict) -> None:
+        action_type = event.get("type")
+        voting_data = event.get("voting_data")
+
+        await self.send(
+            text_data=json.dumps(
+                {"type": action_type, "voting": voting_data},
+                ensure_ascii=False,
+            ),
+        )
+
+    async def send_vote(self, event: dict) -> None:
+        action_type = event.get("type")
+        vote_data = event.get("vote_data")
+
+        await self.send(
+            text_data=json.dumps(
+                {"type": action_type, "vote": vote_data},
+                ensure_ascii=False,
+            ),
+        )
+
+    async def stop_voting(self, event: dict) -> None:
+        action_type = event.get("type")
+        results_data = event.get("results_data")
+
+        await self.send(
+            text_data=json.dumps(
+                {"type": action_type, "results": results_data},
                 ensure_ascii=False,
             ),
         )

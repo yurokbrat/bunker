@@ -2,7 +2,6 @@ from collections.abc import Collection
 from typing import Any
 from uuid import UUID
 
-from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from bunker_game.game.constants import (
@@ -26,6 +25,7 @@ from bunker_game.game.services.create_random_game_characteristics import (
 from bunker_game.game.services.regenerate_characteristic_service import (
     RegenerateCharacteristicService,
 )
+from bunker_game.utils.exceptions import AlreadyUsedActionCardError
 from bunker_game.utils.mixins.websocket_mixin import WebSocketMixin
 
 
@@ -40,8 +40,7 @@ class UseActionCardService(WebSocketMixin):
     ) -> ActionCardUsage:
         action_card_usage = get_object_or_404(ActionCardUsage, card__key=card_key)
         if action_card_usage.is_used:
-            message_error = "Эта карта действия уже использовалась."
-            raise ValidationError(message_error)
+            raise AlreadyUsedActionCardError
         type_action = card_key.split("_")[0]
         target_type = action_card_usage.card.target
         type_characteristic = card_key.split("_")[1]

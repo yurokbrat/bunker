@@ -13,13 +13,14 @@ from rest_framework.response import Response
 
 from bunker_game.game.models import Personage
 from bunker_game.game.models.game import Game
-from bunker_game.game.permissions import IsGameCreator
+from bunker_game.game.permissions import IsUserGameCreator, IsUserGamePersonage
 from bunker_game.game.serializers import (
     GameSerializer,
     KickPersonageGameSerializer,
     NewGameSerializer,
 )
 from bunker_game.game.services import GenerateGameService
+from bunker_game.utils.exceptions import GameActiveError
 from bunker_game.utils.mixins import PermissionByActionMixin, WebSocketMixin
 
 
@@ -34,12 +35,15 @@ class GameViewSet(
     queryset = Game.objects.all()
     serializer_class = GameSerializer
     permission_action_classes = {
-        "start": IsGameCreator,
-        "stop": IsGameCreator,
-        "destroy": IsGameCreator,
-        "kick": IsGameCreator,
+        "start": IsUserGameCreator,
+        "stop": IsUserGameCreator,
+        "destroy": IsUserGameCreator,
+        "kick": IsUserGameCreator,
+        "disconnect": IsUserGamePersonage,
+        "list": IsUserGamePersonage,
+        "retrieve": IsUserGamePersonage,
     }
-    lookup_url_kwarg = "game_uuid"
+    lookup_url_kwarg = "uuid"
     lookup_field = "uuid"
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ("personages__uuid",)
@@ -66,7 +70,7 @@ class GameViewSet(
     def start(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
         if game.is_active:
-            return Response(data="Игра уже начата", status=status.HTTP_400_BAD_REQUEST)
+            raise GameActiveError
         GenerateGameService()(game)
         serializer = GameSerializer(instance=game, context={"request": request})
         self.web_socket_start_game(game.uuid, serializer.data)
@@ -81,7 +85,7 @@ class GameViewSet(
         game.save()
         serializer = GameSerializer(instance=game, context={"request": request})
         self.web_socket_stop_game(game.uuid, serializer.data)
-        return Response(data="Игра завершена", status=status.HTTP_400_BAD_REQUEST)
+        return Response(data="Игра завершена", status=status.HTTP_200_OK)
 
     @extend_schema(request=None, responses=GameSerializer())
     @action(
