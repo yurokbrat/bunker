@@ -13,6 +13,5 @@ def test_user_retrieve(user_api_client):
         "url": f"http://testserver{user.get_absolute_url()}",
         "avatar": user.avatar.url,
         "date_joined": user.date_joined.astimezone().isoformat(),
-        "last_login": user.last_login,
-        "last_online": user.last_online,
+        "last_online": user.last_online.astimezone().isoformat(),
     }

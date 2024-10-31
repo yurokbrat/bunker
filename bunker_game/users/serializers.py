@@ -27,13 +27,11 @@ class UserSerializer(UserShortSerializer):
         fields = (
             *UserShortSerializer.Meta.fields,
             "date_joined",
-            "last_login",
             "last_online",
         )
 
         extra_kwargs = {
             **UserShortSerializer.Meta.extra_kwargs,
             "date_joined": {"read_only": True},
-            "last_login": {"read_only": True},
             "last_online": {"read_only": True},
         }
