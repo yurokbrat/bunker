@@ -15,13 +15,21 @@ from bunker_game.game.models import Personage
 from bunker_game.game.models.game import Game
 from bunker_game.game.permissions import IsUserGameCreator, IsUserGamePersonage
 from bunker_game.game.serializers import (
-    GameSerializer,
+    GameRetrieveSerializer,
     KickPersonageGameSerializer,
     NewGameSerializer,
 )
+from bunker_game.game.serializers.game_serializers import (
+    GameListSerializer,
+    GameShortSerializer,
+)
 from bunker_game.game.services import GenerateGameService
 from bunker_game.utils.exceptions import GameActiveError
-from bunker_game.utils.mixins import PermissionByActionMixin, WebSocketMixin
+from bunker_game.utils.mixins import (
+    PermissionByActionMixin,
+    SerializerByActionMixin,
+    WebSocketMixin,
+)
 
 
 class GameViewSet(
@@ -30,10 +38,18 @@ class GameViewSet(
     mixins.DestroyModelMixin,
     WebSocketMixin,
     PermissionByActionMixin,
+    SerializerByActionMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Game.objects.all()
-    serializer_class = GameSerializer
+    serializer_class = GameRetrieveSerializer
+    serializer_action_classes = {
+        "list": GameListSerializer,
+        "retrieve": GameRetrieveSerializer,
+        "new": NewGameSerializer,
+        "connect": GameShortSerializer,
+        "kick": KickPersonageGameSerializer,
+    }
     permission_action_classes = {
         "start": IsUserGameCreator,
         "stop": IsUserGameCreator,
@@ -42,6 +58,7 @@ class GameViewSet(
         "disconnect": IsUserGamePersonage,
         "list": IsUserGamePersonage,
         "retrieve": IsUserGamePersonage,
+        "connect": IsAuthenticated,
     }
     lookup_url_kwarg = "uuid"
     lookup_field = "uuid"
@@ -49,12 +66,8 @@ class GameViewSet(
     search_fields = ("personages__uuid",)
     filterset_fields = ("is_active", "date_start")
 
-    @extend_schema(responses=GameSerializer())
-    @action(
-        detail=False,
-        methods=("POST",),
-        serializer_class=NewGameSerializer,
-    )
+    @extend_schema(responses=GameRetrieveSerializer())
+    @action(detail=False, methods=("POST",))
     def new(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -62,17 +75,17 @@ class GameViewSet(
             creator=request.user,  # type: ignore[misc]
             game_duration_type=serializer.validated_data["game_duration_type"],
         )
-        serializer = GameSerializer(instance=game, context={"request": request})
+        serializer = GameRetrieveSerializer(instance=game, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @extend_schema(request=None, responses=GameSerializer())
+    @extend_schema(request=None, responses=GameRetrieveSerializer())
     @action(detail=True, methods=("POST",))
     def start(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
         if game.is_active:
             raise GameActiveError
         GenerateGameService()(game)
-        serializer = GameSerializer(instance=game, context={"request": request})
+        serializer = GameRetrieveSerializer(instance=game, context={"request": request})
         self.web_socket_start_game(game.uuid, serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -83,17 +96,12 @@ class GameViewSet(
         game.is_active = False
         game.date_end = timezone.now()
         game.save()
-        serializer = GameSerializer(instance=game, context={"request": request})
+        serializer = GameRetrieveSerializer(instance=game, context={"request": request})
         self.web_socket_stop_game(game.uuid, serializer.data)
         return Response(data="Игра завершена", status=status.HTTP_200_OK)
 
-    @extend_schema(request=None, responses=GameSerializer())
-    @action(
-        detail=True,
-        methods=("POST",),
-        permission_classes=(IsAuthenticated,),
-        serializer_class=GameSerializer,
-    )
+    @extend_schema(request=None, responses=GameRetrieveSerializer())
+    @action(detail=True, methods=("POST",))
     def connect(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
         personage, created = Personage.objects.get_or_create(
@@ -104,15 +112,11 @@ class GameViewSet(
             game.personages.add(personage)
             game.save()
             self.web_socket_join_game(game.uuid, personage, request)
-        serializer = GameSerializer(instance=game, context={"request": request})
+        serializer = GameRetrieveSerializer(instance=game, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @extend_schema(request=None, responses=None)
-    @action(
-        detail=True,
-        methods=("DELETE",),
-        permission_classes=(IsAuthenticated,),
-    )
+    @action(detail=True, methods=("DELETE",))
     def disconnect(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
         personage = get_object_or_404(
@@ -124,11 +128,7 @@ class GameViewSet(
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @extend_schema(responses=None)
-    @action(
-        detail=True,
-        methods=("POST",),
-        serializer_class=KickPersonageGameSerializer,
-    )
+    @action(detail=True, methods=("POST",))
     def kick(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
         serializer = self.get_serializer(data=request.data)

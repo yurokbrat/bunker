@@ -214,27 +214,31 @@ AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default=None)
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#cloudfront
 AWS_S3_ENDPOINT_URL = env("AWS_S3_CUSTOM_DOMAIN", default=None)
 AWS_S3_FILE_OVERWRITE = False
+USE_STORAGES = env.bool("USE_STORAGES", default=False)
 
 # Media
 # ------------------------
-STORAGES = {
-    "default": {
-        "BACKEND": "bunker_game.utils.storage.CustomS3Boto3Storage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
-MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+if USE_STORAGES:
+    STORAGES = {
+        "default": {
+            "BACKEND": "bunker_game.utils.storage.CustomS3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+    MEDIA_URL = "/media/"
 MEDIA_ROOT = f"{APPS_DIR / "media"}"
-
-# # MEDIA
-# # ------------------------------------------------------------------------------
-# # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-# MEDIA_ROOT = str(APPS_DIR / "media")
-# # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
-# MEDIA_URL = "/media/"
 
 # TEMPLATES
 # ------------------------------------------------------------------------------

@@ -27,7 +27,7 @@ migrate: ## Migrate
 	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) python manage.py migrate
 
 pytest: ## Run tests
-	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) pytest -n auto --create-db
+	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) pytest --create-db
 
 coverage: ## Run tests with coverage
 	@$(DOCKER_COMPOSE) run --rm $(DJANGO_SERVICE) coverage run -m pytest

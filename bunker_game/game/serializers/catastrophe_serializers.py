@@ -3,14 +3,21 @@ from rest_framework import serializers
 from bunker_game.game.models import Catastrophe
 
 
-class CatastropheSerializer(serializers.ModelSerializer):
+class CatastropheListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catastrophe
-        fields = (
+        fields: tuple[str, ...] = (
             "uuid",
             "name",
-            "description",
             "image",
-            "percent_population",
             "impact_level",
+        )
+
+
+class CatastropheRetrieveSerializer(CatastropheListSerializer):
+    class Meta(CatastropheListSerializer.Meta):
+        fields = (
+            *CatastropheListSerializer.Meta.fields,
+            "description",
+            "percent_population",
         )

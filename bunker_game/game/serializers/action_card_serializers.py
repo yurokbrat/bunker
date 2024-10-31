@@ -4,15 +4,19 @@ from bunker_game.game.enums import TypeCharacteristicChoices
 from bunker_game.game.models import ActionCard, ActionCardUsage
 
 
-class ActionCardSerializer(serializers.ModelSerializer):
+class ActionCardListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActionCard
-        fields = ("uuid", "name", "key", "description", "target")
-        read_only_fields = ("name", "key", "description", "target")
+        fields: tuple[str, ...] = ("uuid", "name", "key")
+
+
+class ActionCardRetrieveSerializer(ActionCardListSerializer):
+    class Meta(ActionCardListSerializer.Meta):
+        fields = (*ActionCardListSerializer.Meta.fields, "description", "target")
 
 
 class ActionCardUsageSerializer(serializers.ModelSerializer):
-    card = ActionCardSerializer()
+    card = ActionCardRetrieveSerializer()
 
     class Meta:
         model = ActionCardUsage

@@ -19,6 +19,9 @@ class UserShortSerializer(serializers.ModelSerializer):
         }
 
 
+class UserListSerializer(UserShortSerializer): ...
+
+
 class UserSerializer(UserShortSerializer):
     class Meta(UserShortSerializer.Meta):
         fields = (

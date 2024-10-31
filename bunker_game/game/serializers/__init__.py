@@ -1,16 +1,18 @@
 from bunker_game.game.serializers.action_card_serializers import (
-    ActionCardSerializer,
+    ActionCardRetrieveSerializer,
     ActionCardUsageSerializer,
     UseActionCardSerializer,
 )
 from bunker_game.game.serializers.build_info_serializer import BuildInfoSerializer
 from bunker_game.game.serializers.bunker_serializers import (
+    BunkerRetrieveSerializer,
     BunkerRoomsSerializer,
-    BunkerSerializer,
 )
-from bunker_game.game.serializers.catastrophe_serializers import CatastropheSerializer
+from bunker_game.game.serializers.catastrophe_serializers import (
+    CatastropheRetrieveSerializer,
+)
 from bunker_game.game.serializers.game_serializers import (
-    GameSerializer,
+    GameRetrieveSerializer,
     KickPersonageGameSerializer,
     NewGameSerializer,
 )
@@ -22,18 +24,18 @@ from bunker_game.game.serializers.personage_serializers import (
     DiseaseSerializer,
     HobbySerializer,
     PersonageRegenerateSerializer,
-    PersonageSerializer,
+    PersonageRetrieveSerializer,
     PhobiaSerializer,
     ProfessionSerializer,
 )
 
 __all__ = (
-    "BunkerSerializer",
+    "BunkerRetrieveSerializer",
     "BuildInfoSerializer",
     "BunkerRoomsSerializer",
-    "CatastropheSerializer",
-    "PersonageSerializer",
-    "ActionCardSerializer",
+    "CatastropheRetrieveSerializer",
+    "PersonageRetrieveSerializer",
+    "ActionCardRetrieveSerializer",
     "ActionCardUsageSerializer",
     "UseActionCardSerializer",
     "AdditionalInfoSerializer",
@@ -45,7 +47,7 @@ __all__ = (
     "PersonageRegenerateSerializer",
     "PhobiaSerializer",
     "ProfessionSerializer",
-    "GameSerializer",
+    "GameRetrieveSerializer",
     "NewGameSerializer",
     "KickPersonageGameSerializer",
 )

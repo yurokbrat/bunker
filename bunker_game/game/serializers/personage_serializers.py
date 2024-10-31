@@ -18,28 +18,52 @@ from bunker_game.game.serializers.action_card_serializers import (
 from bunker_game.users.serializers import UserShortSerializer
 
 
-class DiseaseSerializer(serializers.ModelSerializer):
+class DiseaseShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Disease
-        fields = ("uuid", "name", "degree_percent", "is_curable")
+        fields: tuple[str, ...] = ("uuid", "name")
 
 
-class ProfessionSerializer(serializers.ModelSerializer):
+class DiseaseSerializer(DiseaseShortSerializer):
+    class Meta(DiseaseShortSerializer.Meta):
+        fields = (*DiseaseShortSerializer.Meta.fields, "degree_percent", "is_curable")
+
+
+class ProfessionShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession
-        fields = ("uuid", "name", "additional_skill", "experience")
+        fields: tuple[str, ...] = ("uuid", "name")
 
 
-class PhobiaSerializer(serializers.ModelSerializer):
+class ProfessionSerializer(ProfessionShortSerializer):
+    class Meta(ProfessionShortSerializer.Meta):
+        fields = (
+            *ProfessionShortSerializer.Meta.fields,
+            "additional_skill",
+            "experience",
+        )
+
+
+class PhobiaShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Phobia
-        fields = ("uuid", "name", "stage")
+        fields: tuple[str, ...] = ("uuid", "name")
 
 
-class HobbySerializer(serializers.ModelSerializer):
+class PhobiaSerializer(PhobiaShortSerializer):
+    class Meta(PhobiaShortSerializer.Meta):
+        fields = (*PhobiaShortSerializer.Meta.fields, "stage")
+
+
+class HobbyShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hobby
-        fields = ("uuid", "name", "experience")
+        fields: tuple[str, ...] = ("uuid", "name")
+
+
+class HobbySerializer(HobbyShortSerializer):
+    class Meta(HobbyShortSerializer.Meta):
+        fields = (*HobbyShortSerializer.Meta.fields, "experience")
 
 
 class CharacterSerializer(serializers.ModelSerializer):
@@ -54,39 +78,59 @@ class AdditionalInfoSerializer(serializers.ModelSerializer):
         fields = ("uuid", "name")
 
 
-class BaggageSerializer(serializers.ModelSerializer):
+class BaggageShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Baggage
-        fields = ("uuid", "name", "status")
+        fields: tuple[str, ...] = ("uuid", "name")
+
+
+class BaggageSerializer(BaggageShortSerializer):
+    class Meta(BaggageShortSerializer.Meta):
+        fields = (*BaggageShortSerializer.Meta.fields, "status")
 
 
 class PersonageShortSerializer(serializers.ModelSerializer):
     user = UserShortSerializer(read_only=True)
+    disease = DiseaseShortSerializer()
+    profession = ProfessionShortSerializer()
+    phobia = PhobiaShortSerializer()
+    hobby = HobbyShortSerializer()
+    character = CharacterSerializer()
+    additional_info = AdditionalInfoSerializer()
+    baggage = BaggageShortSerializer()
 
     class Meta:
         model = Personage
         fields: tuple[str, ...] = (
             "uuid",
             "user",
+            "age",
+            "gender",
+            "orientation",
+            "disease",
+            "profession",
+            "phobia",
+            "hobby",
+            "character",
+            "additional_info",
+            "baggage",
         )
 
 
-class PersonageSerializer(PersonageShortSerializer):
+class PersonageListSerializer(PersonageShortSerializer): ...
+
+
+class PersonageRetrieveSerializer(PersonageListSerializer):
     disease = DiseaseSerializer()
     profession = ProfessionSerializer()
     phobia = PhobiaSerializer()
     hobby = HobbySerializer()
-    character = CharacterSerializer()
-    additional_info = AdditionalInfoSerializer()
     baggage = BaggageSerializer()
     action_cards = ActionCardUsageSerializer(read_only=True, many=True)
 
-    class Meta(PersonageShortSerializer.Meta):
+    class Meta(PersonageListSerializer.Meta):
         fields = (
-            *PersonageShortSerializer.Meta.fields,
-            "age",
-            "gender",
-            "orientation",
+            *PersonageListSerializer.Meta.fields,
             "disease",
             "profession",
             "phobia",

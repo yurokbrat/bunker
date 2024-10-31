@@ -9,9 +9,14 @@ class BunkerRoomsSerializer(serializers.ModelSerializer):
         fields = ("uuid", "name", "area")
 
 
-class BunkerSerializer(serializers.ModelSerializer):
-    rooms = BunkerRoomsSerializer(many=True)
-
+class BunkerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bunker
-        fields = ("uuid", "name", "description", "image", "rooms")
+        fields: tuple[str, ...] = ("uuid", "name", "image")
+
+
+class BunkerRetrieveSerializer(BunkerListSerializer):
+    rooms = BunkerRoomsSerializer(many=True)
+
+    class Meta(BunkerListSerializer.Meta):
+        fields = (*BunkerListSerializer.Meta.fields, "description", "rooms")

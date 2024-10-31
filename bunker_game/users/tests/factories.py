@@ -1,8 +1,9 @@
 from collections.abc import Sequence
 from typing import Any
 
+import pytz
 from factory import Faker, post_generation
-from factory.django import DjangoModelFactory
+from factory.django import DjangoModelFactory, ImageField
 
 from bunker_game.users.models import User
 
@@ -10,10 +11,12 @@ from bunker_game.users.models import User
 class UserFactory(DjangoModelFactory[User]):
     username = Faker("user_name")
     email = Faker("email")
-    name = Faker("name")
+    name = Faker("name", locale="ru")
+    avatar = ImageField()
+    last_online = Faker("date_time", tzinfo=pytz.UTC)
 
     @post_generation
-    def password(self, create: bool, extracted: Sequence[Any], **kwargs: Any) -> None:  # noqa: FBT001
+    def password(self, create: bool, extracted: Sequence[Any], **kwargs: Any) -> None:
         password = (
             extracted
             if extracted
@@ -32,7 +35,7 @@ class UserFactory(DjangoModelFactory[User]):
     def _after_postgeneration(
         cls,
         instance: User,
-        create: bool,  # noqa: FBT001
+        create: bool,
         results: None = None,
     ) -> None:
         """Save again the instance if creating and at least one hook ran."""

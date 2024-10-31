@@ -14,9 +14,10 @@ from bunker_game.game.serializers import (
     ActionCardUsageSerializer,
     CharacteristicVisibilitySerializer,
     PersonageRegenerateSerializer,
-    PersonageSerializer,
+    PersonageRetrieveSerializer,
     UseActionCardSerializer,
 )
+from bunker_game.game.serializers.personage_serializers import PersonageListSerializer
 from bunker_game.game.services import (
     GeneratePersonageService,
     RegenerateCharacteristicService,
@@ -24,7 +25,11 @@ from bunker_game.game.services import (
     UseActionCardService,
 )
 from bunker_game.utils.format_characteristic_value import format_characteristic_value
-from bunker_game.utils.mixins import PermissionByActionMixin, WebSocketMixin
+from bunker_game.utils.mixins import (
+    PermissionByActionMixin,
+    SerializerByActionMixin,
+    WebSocketMixin,
+)
 
 
 class PersonageViewSet(
@@ -32,10 +37,17 @@ class PersonageViewSet(
     mixins.ListModelMixin,
     WebSocketMixin,
     PermissionByActionMixin,
+    SerializerByActionMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Personage.objects.all()
-    serializer_class = PersonageSerializer
+    serializer_class = PersonageRetrieveSerializer
+    serializer_action_classes = {
+        "list": PersonageListSerializer,
+        "retrieve": PersonageRetrieveSerializer,
+        "reveal_characteristic": CharacteristicVisibilitySerializer,
+        "use_action_card": UseActionCardSerializer,
+    }
     permission_action_classes = {
         "generate": IsRelatedPersonage,
         "regenerate": IsRelatedPersonage,
@@ -50,12 +62,12 @@ class PersonageViewSet(
     def get_queryset(self) -> QuerySet[Personage]:
         return Personage.objects.all()
 
-    @extend_schema(request=None, responses=PersonageSerializer())
+    @extend_schema(request=None, responses=PersonageRetrieveSerializer())
     @action(detail=True, methods=("POST",))
     def generate(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         personage = self.get_object()
         new_personage, created = GeneratePersonageService()(personage)
-        personage_serializer = PersonageSerializer(
+        personage_serializer = PersonageRetrieveSerializer(
             instance=new_personage,
             context={"request": request},
         )
@@ -91,7 +103,6 @@ class PersonageViewSet(
     @action(
         detail=True,
         methods=("PATCH",),
-        serializer_class=CharacteristicVisibilitySerializer,
         url_path="reveal-characteristic",
     )
     def reveal_characteristic(
@@ -132,7 +143,6 @@ class PersonageViewSet(
     @action(
         detail=True,
         methods=("POST",),
-        serializer_class=UseActionCardSerializer,
         url_path="use-action-card",
     )
     def use_action_card(self, request: Request, *args: Any, **kwargs: Any) -> Response:

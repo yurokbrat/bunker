@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
 
 from bunker_game.utils.generate_hide_name import upload_to_avatars
 
@@ -26,3 +27,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "пользователь"
         verbose_name_plural = "пользователи"
+
+    def get_absolute_url(self) -> str:
+        return reverse("users:user-detail", args=(self.uuid,))
