@@ -10,7 +10,7 @@ def test_voting_vote(gaming_user_api_client, game, voting):
         f"/api/games/{game.uuid}/voting/{voting.uuid}/vote/",
         data={"target": target_personage.uuid},
     )
-    vote = Vote.objects.get(voting=voting, target=target_personage)
+    vote = Vote.objects.get(voting=voting, target=target_personage)  # type: ignore[attr-defined]
 
     assert response.status_code == status.HTTP_201_CREATED
     assert response.data == {

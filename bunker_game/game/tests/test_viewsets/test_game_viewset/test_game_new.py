@@ -17,13 +17,13 @@ def test_game_new(user_api_client, game_duration_type):
 
     assert response.status_code == status.HTTP_201_CREATED
     assert response.data == {
-        "uuid": f"{game.uuid}",
+        "uuid": f"{game.uuid}",  # type: ignore[union-attr]
         "creator": {
-            "uuid": f"{game.creator.uuid}",
-            "username": game.creator.username,
-            "name": game.creator.name,
-            "url": f"http://testserver{game.creator.get_absolute_url()}",
-            "avatar": game.creator.avatar.url,
+            "uuid": f"{game.creator.uuid}",  # type: ignore[union-attr]
+            "username": game.creator.username,  # type: ignore[union-attr]
+            "name": game.creator.name,  # type: ignore[union-attr]
+            "url": f"http://testserver{game.creator.get_absolute_url()}",  # type: ignore[union-attr]
+            "avatar": game.creator.avatar.url,  # type: ignore[union-attr]
         },
         "personages_count": 0,
         "personages": [],

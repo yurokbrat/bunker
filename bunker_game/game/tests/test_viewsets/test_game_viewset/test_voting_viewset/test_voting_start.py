@@ -7,7 +7,7 @@ def test_voting_start(creator_game_user_api_client, game):
     response = creator_game_user_api_client.post(
         f"/api/games/{game.uuid}/voting/start/",
     )
-    voting = Voting.objects.get(game=game)
+    voting = Voting.objects.get(game=game)  # type: ignore[attr-defined]
 
     assert response.status_code == status.HTTP_200_OK
     assert response.data == {
