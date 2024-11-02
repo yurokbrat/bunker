@@ -7,6 +7,7 @@ services:
     container_name: django_bunker_test
     depends_on:
       - postgres-bunker-test
+      - redis-bunker-test
     env_file:
       - ./.envs/.test/.django
       - ./.envs/.test/.postgres
@@ -20,3 +21,7 @@ services:
     container_name: postgres_bunker_test
     env_file:
       - ./.envs/.test/.postgres
+
+  redis-bunker-test:
+    image: docker.io/redis:6
+    container_name: redis_bunker_test
