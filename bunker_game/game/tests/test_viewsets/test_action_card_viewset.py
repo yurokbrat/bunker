@@ -11,6 +11,7 @@ def test_action_card_list(user_api_client):
     response = user_api_client.get("/api/action-cards/")
 
     assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == len(action_cards)
     assert response.data == [
         {
             "uuid": f"{action_card.uuid}",

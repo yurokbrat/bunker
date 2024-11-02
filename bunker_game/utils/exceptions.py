@@ -48,3 +48,21 @@ class NoVotesError(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = "Нет голосов для голосования"
     default_code = "no_votes"
+
+
+class NoPersonagesError(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = "В игре нет персонажей"
+    default_code = "no_personages"
+
+
+class NoDefaultCharacteristicError(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = "Не найдены стандартные характеристики"
+    default_code = "no_default_characteristic"
+
+
+class UserNotCreatorGameError(APIException):
+    status_code = status.HTTP_403_FORBIDDEN
+    default_detail = "Вы не являетесь создателем игры"
+    default_code = "user_not_creator_game"

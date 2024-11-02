@@ -5,7 +5,7 @@ from bunker_game.game.models import Catastrophe
 
 
 class CatastropheFactory(DjangoModelFactory):
-    name = Faker("name", locale="ru")
+    name = Faker("text", locale="ru", max_nb_chars=100)
     description = Faker("text", locale="ru", max_nb_chars=500)
     image = ImageField()
     impact_level = Faker("pyint", min_value=0, max_value=5)

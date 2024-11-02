@@ -11,6 +11,7 @@ def test_game_list(user_api_client):
     response = user_api_client.get("/api/games/")
 
     assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == len(games)
     assert response.data == [
         {
             "uuid": f"{game.uuid}",

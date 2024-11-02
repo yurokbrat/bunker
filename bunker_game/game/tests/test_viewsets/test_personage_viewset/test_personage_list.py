@@ -8,6 +8,7 @@ def test_personage_list(user_api_client):
     response = user_api_client.get("/api/personages/")
 
     assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == len(personages)
     assert response.data == [
         {
             "uuid": f"{personage.uuid}",

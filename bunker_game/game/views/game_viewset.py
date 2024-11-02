@@ -24,7 +24,7 @@ from bunker_game.game.serializers.game_serializers import (
     GameShortSerializer,
 )
 from bunker_game.game.services import GenerateGameService
-from bunker_game.utils.exceptions import GameActiveError
+from bunker_game.utils.exceptions import GameActiveError, NoPersonagesError
 from bunker_game.utils.mixins import (
     PermissionByActionMixin,
     SerializerByActionMixin,
@@ -84,6 +84,8 @@ class GameViewSet(
         game = self.get_object()
         if game.is_active:
             raise GameActiveError
+        if game.personages.count() == 0:
+            raise NoPersonagesError
         GenerateGameService()(game)
         serializer = GameRetrieveSerializer(instance=game, context={"request": request})
         self.web_socket_start_game(game.uuid, serializer.data)
@@ -98,12 +100,14 @@ class GameViewSet(
         game.save()
         serializer = GameRetrieveSerializer(instance=game, context={"request": request})
         self.web_socket_stop_game(game.uuid, serializer.data)
-        return Response(data="Игра завершена", status=status.HTTP_200_OK)
+        return Response(data={"result": "Игра завершена"}, status=status.HTTP_200_OK)
 
     @extend_schema(request=None, responses=GameRetrieveSerializer())
     @action(detail=True, methods=("POST",))
     def connect(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game = self.get_object()
+        if game.is_active:
+            raise GameActiveError
         personage, created = Personage.objects.get_or_create(
             user=request.user,
             game_id=game.id,
@@ -121,7 +125,7 @@ class GameViewSet(
         game = self.get_object()
         personage = get_object_or_404(
             Personage,
-            game_id=game.id,
+            user=request.user,
         )
         self.web_socket_exit_game(game.uuid, personage, request)
         personage.delete()

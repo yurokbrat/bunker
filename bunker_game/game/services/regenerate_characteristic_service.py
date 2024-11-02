@@ -4,7 +4,6 @@ from django.db.models import Model
 
 from bunker_game.game.models import Personage
 from bunker_game.game.services.create_random_characteristics import (
-    generate_random_action_cards,
     get_random_characteristic,
 )
 from bunker_game.utils.exceptions import InvalidCharacteristicError
@@ -12,8 +11,6 @@ from bunker_game.utils.exceptions import InvalidCharacteristicError
 
 class RegenerateCharacteristicService:
     def __call__(self, personage: Personage, characteristic: str) -> int | Model | list:
-        if characteristic == "action_cards":
-            generate_random_action_cards(personage, 1)
         old_value = getattr(personage, characteristic)
         new_value = self._get_new_value(characteristic)
         while old_value == new_value:

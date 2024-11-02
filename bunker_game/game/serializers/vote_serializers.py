@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from bunker_game.game.models.vote import Vote, Voting
-from bunker_game.game.serializers.game_serializers import GameShortSerializer
 from bunker_game.game.serializers.personage_serializers import PersonageShortSerializer
 
 
@@ -15,7 +14,7 @@ class VoteSerializer(serializers.ModelSerializer):
 
 
 class VotingSerializer(serializers.ModelSerializer):
-    game = GameShortSerializer(label="Игра", read_only=True)
+    game = serializers.UUIDField(source="game.uuid", label="UUID игры", read_only=True)
     votes = VoteSerializer(label="Голоса", many=True, read_only=True)
 
     class Meta:

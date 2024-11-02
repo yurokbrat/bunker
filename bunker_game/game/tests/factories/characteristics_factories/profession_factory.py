@@ -7,7 +7,7 @@ from bunker_game.game.models import Profession
 
 
 class ProfessionFactory(DjangoModelFactory):
-    name = Faker("name", locale="ru")
+    name = Faker("text", locale="ru", max_nb_chars=100)
     experience = FuzzyChoice(ExperienceChoice.values)
 
     class Meta:

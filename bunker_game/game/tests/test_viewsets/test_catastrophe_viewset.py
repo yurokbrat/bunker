@@ -11,6 +11,7 @@ def test_catastrophe_list(user_api_client):
     response = user_api_client.get("/api/catastrophes/")
 
     assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == len(catastrophes)
     assert response.data == [
         {
             "uuid": f"{catastrophe.uuid}",

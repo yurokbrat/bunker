@@ -11,7 +11,7 @@ from rest_framework.response import Response
 
 from bunker_game.game.models import Game
 from bunker_game.game.models.vote import Voting
-from bunker_game.game.permissions import IsUserGameCreator, IsUserVotingPersonage
+from bunker_game.game.permissions import IsUserVotingCreatorGame, IsUserVotingPersonage
 from bunker_game.game.serializers.personage_serializers import PersonageShortSerializer
 from bunker_game.game.serializers.vote_serializers import (
     GiveVoiceSerializer,
@@ -20,6 +20,7 @@ from bunker_game.game.serializers.vote_serializers import (
     VotingSerializer,
 )
 from bunker_game.game.services.vote_service import VoteService
+from bunker_game.utils.exceptions import UserNotCreatorGameError
 from bunker_game.utils.mixins import PermissionByActionMixin, WebSocketMixin
 
 
@@ -37,8 +38,8 @@ class VoteViewSet(
         "list": IsUserVotingPersonage,
         "retrieve": IsUserVotingPersonage,
         "vote": IsUserVotingPersonage,
-        "start": IsUserGameCreator,
-        "stop": IsUserGameCreator,
+        "start": IsUserVotingPersonage,
+        "stop": IsUserVotingCreatorGame,
     }
     filterset_fields = ("is_active",)
     lookup_field = "uuid"
@@ -54,6 +55,8 @@ class VoteViewSet(
     def start(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         game_uuid = self.kwargs.get("game_uuid")
         game = get_object_or_404(Game, uuid=game_uuid)
+        if game.creator != request.user:
+            raise UserNotCreatorGameError
         voting = VoteService().start(game)
         voting_data = VotingSerializer(
             instance=voting,
@@ -79,12 +82,13 @@ class VoteViewSet(
     def stop(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         voting = self.get_object()
         personage, vote_count = VoteService().stop(voting)
-        personage_data = (
-            PersonageShortSerializer(personage, context={"request": request}).data,
+        personage_serializer = PersonageShortSerializer(
+            personage,
+            context={"request": request},
         )
         results_data = {
             "results": {
-                "personage": personage_data,
+                "personage": personage_serializer.data,
                 "vote_count": vote_count,
             },
         }

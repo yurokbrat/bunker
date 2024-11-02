@@ -7,7 +7,7 @@ from bunker_game.game.models import Baggage
 
 
 class BaggageFactory(DjangoModelFactory):
-    name = Faker("name", locale="ru")
+    name = Faker("text", locale="ru", max_nb_chars=100)
     status = FuzzyChoice(StatusBaggageChoice.values)
 
     class Meta:

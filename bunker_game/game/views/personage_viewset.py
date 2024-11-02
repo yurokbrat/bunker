@@ -47,6 +47,7 @@ class PersonageViewSet(
         "retrieve": PersonageRetrieveSerializer,
         "reveal_characteristic": CharacteristicVisibilitySerializer,
         "use_action_card": UseActionCardSerializer,
+        "regenerate": PersonageRegenerateSerializer,
     }
     permission_action_classes = {
         "generate": IsRelatedPersonage,
@@ -80,7 +81,7 @@ class PersonageViewSet(
         serializer_class=PersonageRegenerateSerializer,
     )
     def regenerate(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        regenerate_serializer = PersonageRegenerateSerializer(data=request.data)
+        regenerate_serializer = self.get_serializer(data=request.data)
         regenerate_serializer.is_valid(raise_exception=True)
         characteristic = regenerate_serializer.validated_data["characteristic_type"]
         personage = self.get_object()

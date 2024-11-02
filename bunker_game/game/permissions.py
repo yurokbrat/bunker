@@ -36,3 +36,13 @@ class IsUserVotingPersonage(IsAuthenticated):
         return any(
             request.user == personage.user for personage in obj.game.personages.all()
         )
+
+
+class IsUserVotingCreatorGame(IsAuthenticated):
+    def has_object_permission(
+        self,
+        request: Request,
+        view: APIView,
+        obj: Voting,
+    ) -> bool:
+        return obj.game.creator == request.user

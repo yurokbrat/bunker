@@ -19,6 +19,7 @@ class GameFactory(DjangoModelFactory):
     num_places = Faker("random_int")
     game_duration_type = FuzzyChoice(GameDurationType.values)
     time_in_bunker = f"{(Faker('random_int'))} месяцев"
+    is_active = True
 
     class Meta:
         model = Game

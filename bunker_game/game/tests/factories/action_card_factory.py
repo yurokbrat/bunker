@@ -7,7 +7,7 @@ from bunker_game.game.models import ActionCard
 
 
 class ActionCardFactory(DjangoModelFactory):
-    name = Faker("name", locale="ru")
+    name = Faker("text", locale="ru", max_nb_chars=120)
     key = Faker("text", locale="en_US", max_nb_chars=50)
     description = Faker("text", max_nb_chars=120)
     target = FuzzyChoice(ActionCardTargetChoice.values)

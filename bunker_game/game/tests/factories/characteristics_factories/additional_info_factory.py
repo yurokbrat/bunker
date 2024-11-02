@@ -5,7 +5,7 @@ from bunker_game.game.models import AdditionalInfo
 
 
 class AdditionalInfoFactory(DjangoModelFactory):
-    name = Faker("name", locale="ru")
+    name = Faker("text", locale="ru", max_nb_chars=100)
 
     class Meta:
         model = AdditionalInfo

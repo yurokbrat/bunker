@@ -17,6 +17,7 @@ from bunker_game.game.models import (
     Character,
     Personage,
 )
+from bunker_game.utils.exceptions import NoDefaultCharacteristicError
 from bunker_game.utils.get_random import random
 
 
@@ -69,6 +70,8 @@ def create_random_characteristic(
     default_characteristic = (
         model.objects.filter(is_generated=False).order_by("?").first()
     )
+    if default_characteristic is None:
+        raise NoDefaultCharacteristicError
     random_characteristic = model.objects.create(
         name=default_characteristic.name,
         is_generated=True,

@@ -35,14 +35,21 @@ def user_api_client(create_api_client, user) -> APIClient:
 
 
 @pytest.fixture
-def user_client(db: None, user) -> Client:
-    client = Client()
-    client.force_login(user)
-    return client
-
-
-@pytest.fixture
 def admin_client(admin_user) -> Client:
     client = Client()
     client.force_login(admin_user)
     return client
+
+
+@pytest.fixture
+def gaming_user_api_client(user_api_client, gaming_personage) -> APIClient:
+    gaming_personage.user = user_api_client.user
+    gaming_personage.save()
+    return user_api_client
+
+
+@pytest.fixture
+def creator_game_user_api_client(user_api_client, game) -> APIClient:
+    game.creator = user_api_client.user
+    game.save()
+    return user_api_client

@@ -11,6 +11,7 @@ def test_bunker_list(user_api_client):
     response = user_api_client.get("/api/bunkers/")
 
     assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == len(bunkers)
     assert response.data == [
         {
             "uuid": f"{bunker.uuid}",

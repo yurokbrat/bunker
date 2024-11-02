@@ -19,6 +19,7 @@ from bunker_game.game.tests.factories.charasteristic_visibility_factory import (
 )
 from bunker_game.game.tests.factories.game_factory import GameFactory
 from bunker_game.game.tests.factories.personage_factory import PersonageFactory
+from bunker_game.game.tests.factories.voting_factories import VoteFactory, VotingFactory
 
 __all__ = (
     "BunkerFactory",
@@ -36,4 +37,6 @@ __all__ = (
     "CharacteristicVisibilityFactory",
     "GameFactory",
     "CatastropheFactory",
+    "VoteFactory",
+    "VotingFactory",
 )

@@ -5,7 +5,7 @@ from bunker_game.game.models import Character
 
 
 class CharacterFactory(DjangoModelFactory):
-    name = Faker("name", locale="ru")
+    name = Faker("text", locale="ru", max_nb_chars=120)
 
     class Meta:
         model = Character
