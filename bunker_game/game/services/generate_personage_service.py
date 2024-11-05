@@ -1,7 +1,3 @@
-import logging
-
-from django.db import IntegrityError, transaction
-
 from bunker_game.game.models import (
     Personage,
 )
@@ -19,15 +15,6 @@ class GeneratePersonageService:
             defaults=personage_data,
         )
         if personage.action_cards.count() == 0:
-            success = False
-            while not success:
-                try:
-                    with transaction.atomic():
-                        generate_random_action_cards(personage)
-                    success = True
-                except IntegrityError:
-                    logging.warning(
-                        "Не удалось сгенерировать уникальную карту. Повторяю попытку",
-                    )
+            generate_random_action_cards(personage)
 
         return personage, created

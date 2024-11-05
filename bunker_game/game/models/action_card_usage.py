@@ -31,16 +31,8 @@ class ActionCardUsage(models.Model):
     is_used = models.BooleanField(default=False, verbose_name="использована")
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=("personage", "game", "card"),
-                name="unique_personage_game_action_card",
-            ),
-            models.UniqueConstraint(
-                fields=("personage", "card"),
-                name="unique_personage_action_card",
-            ),
-        ]
+        verbose_name = "использование карты действия"
+        verbose_name_plural = "использования карт действий"
 
     def __str__(self) -> str:
         return f"{self.card} - {self.personage} - {self.game}"

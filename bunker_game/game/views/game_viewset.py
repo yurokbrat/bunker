@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.db.models import QuerySet
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
@@ -41,7 +42,6 @@ class GameViewSet(
     SerializerByActionMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Game.objects.all()
     serializer_class = GameRetrieveSerializer
     serializer_action_classes = {
         "list": GameListSerializer,
@@ -65,6 +65,25 @@ class GameViewSet(
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ("personages__uuid",)
     filterset_fields = ("is_active", "date_start")
+
+    def get_queryset(self) -> QuerySet[Game]:
+        return (
+            Game.objects.all()
+            .prefetch_related(
+                "personages__user",
+                "personages__disease",
+                "personages__profession",
+                "personages__phobia",
+                "personages__hobby",
+                "personages__character",
+                "personages__additional_info",
+                "personages__baggage",
+                "personages__action_cards__card",
+                "bunker__rooms",
+                "action_cards__card",
+            )
+            .select_related("creator", "bunker", "catastrophe")
+        )
 
     @extend_schema(responses=GameRetrieveSerializer())
     @action(detail=False, methods=("POST",))

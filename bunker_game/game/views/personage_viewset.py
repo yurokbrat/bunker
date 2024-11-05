@@ -40,7 +40,6 @@ class PersonageViewSet(
     SerializerByActionMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Personage.objects.all()
     serializer_class = PersonageRetrieveSerializer
     serializer_action_classes = {
         "list": PersonageListSerializer,
@@ -61,7 +60,16 @@ class PersonageViewSet(
     filterset_fields = ("game__uuid", "user__uuid")
 
     def get_queryset(self) -> QuerySet[Personage]:
-        return Personage.objects.all()
+        return Personage.objects.all().select_related(
+            "disease",
+            "user",
+            "profession",
+            "phobia",
+            "additional_info",
+            "baggage",
+            "character",
+            "hobby",
+        )
 
     @extend_schema(request=None, responses=PersonageRetrieveSerializer())
     @action(detail=True, methods=("POST",))

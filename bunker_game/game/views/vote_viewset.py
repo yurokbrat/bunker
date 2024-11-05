@@ -11,7 +11,11 @@ from rest_framework.response import Response
 
 from bunker_game.game.models import Game
 from bunker_game.game.models.vote import Voting
-from bunker_game.game.permissions import IsUserVotingCreatorGame, IsUserVotingPersonage
+from bunker_game.game.permissions import (
+    IsRelatedVoter,
+    IsUserVotingCreatorGame,
+    IsUserVotingPersonage,
+)
 from bunker_game.game.serializers.personage_serializers import PersonageShortSerializer
 from bunker_game.game.serializers.vote_serializers import (
     GiveVoiceSerializer,
@@ -37,7 +41,7 @@ class VoteViewSet(
     permission_action_classes = {
         "list": IsUserVotingPersonage,
         "retrieve": IsUserVotingPersonage,
-        "vote": IsUserVotingPersonage,
+        "vote": IsRelatedVoter,
         "start": IsUserVotingPersonage,
         "stop": IsUserVotingCreatorGame,
     }
@@ -47,7 +51,30 @@ class VoteViewSet(
 
     def get_queryset(self) -> QuerySet[Voting]:
         if game_uuid := self.kwargs.get("game_uuid"):
-            return Voting.objects.filter(game__uuid=game_uuid)  # type: ignore[attr-defined]
+            return (
+                Voting.objects.filter(game__uuid=game_uuid)  # type: ignore[attr-defined]
+                .prefetch_related(
+                    "votes",
+                    "votes__voter__user",
+                    "votes__voter__disease",
+                    "votes__voter__profession",
+                    "votes__voter__phobia",
+                    "votes__voter__hobby",
+                    "votes__voter__character",
+                    "votes__voter__additional_info",
+                    "votes__voter__baggage",
+                    "votes__target__user",
+                    "votes__target__disease",
+                    "votes__target__profession",
+                    "votes__target__phobia",
+                    "votes__target__hobby",
+                    "votes__target__character",
+                    "votes__target__additional_info",
+                    "votes__target__baggage",
+                )
+                .select_related("game")
+                .only("uuid", "game__uuid", "votes", "is_active", "created_at")
+            )
         return Voting.objects.none()  # type: ignore[attr-defined]
 
     @extend_schema(request=None, responses=VotingSerializer())
